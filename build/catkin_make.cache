@@ -1,2 +1,0 @@
-dynamixel_gui
--DCATKIN_DEVEL_PREFIX=/home/charles/devel/ros/dynamixel_gui/devel -DCMAKE_INSTALL_PREFIX=/home/charles/devel/ros/dynamixel_gui/install -G Unix Makefiles

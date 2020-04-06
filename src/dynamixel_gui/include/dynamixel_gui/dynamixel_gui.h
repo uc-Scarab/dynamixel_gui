@@ -110,6 +110,8 @@ protected slots:
   virtual void onRotateLeft();
   virtual void onRotateRight();
 
+  virtual void testConnect();
+
 protected:
 
   virtual void callbackImage(const sensor_msgs::Image::ConstPtr& msg);

@@ -1,7 +1,0 @@
--DROS_BUILD_SHARED_LIBS=1
--DROS_BUILD_SHARED_LIBS=1
--DROS_PACKAGE_NAME="dynamixel_gui"
--DROSCONSOLE_BACKEND_LOG4CXX
--o
-/home/charles/devel/ros/dynamixel_gui/build/dynamixel_gui/include/dynamixel_gui/src/moc_image_view.cpp
-/home/charles/devel/ros/dynamixel_gui/src/dynamixel_gui/include/dynamixel_gui/src/image_view.h

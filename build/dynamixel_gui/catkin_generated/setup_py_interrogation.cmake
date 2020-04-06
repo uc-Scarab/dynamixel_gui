@@ -1,6 +1,0 @@
-set(dynamixel_gui_SETUP_PY_VERSION "0.0.1")
-set(dynamixel_gui_SETUP_PY_SCRIPTS "scripts/dynamixel_gui")
-set(dynamixel_gui_SETUP_PY_PACKAGES "dynamixel_gui")
-set(dynamixel_gui_SETUP_PY_PACKAGE_DIRS "src/dynamixel_gui")
-set(dynamixel_gui_SETUP_PY_MODULES "")
-set(dynamixel_gui_SETUP_PY_MODULE_DIRS "")

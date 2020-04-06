@@ -1,8 +1,0 @@
-prefix=/home/charles/devel/ros/dynamixel_gui/install
-
-Name: rqt_image_view
-Description: Description of rqt_image_view
-Version: 0.4.13
-Cflags: -I/home/charles/devel/ros/dynamixel_gui/install/include
-Libs: -L/home/charles/devel/ros/dynamixel_gui/install/lib -lrqt_image_view
-Requires: rqt_gui rqt_gui_cpp image_transport sensor_msgs cv_bridge geometry_msgs
