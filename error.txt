@@ -1,0 +1,16 @@
+[ 20%] Building CXX object dynamixel_gui/CMakeFiles/dynamixel_gui.dir/include/dynamixel_gui/moc_dynamixel_gui.cpp.o
+[ 40%] Building CXX object dynamixel_gui/CMakeFiles/dynamixel_gui.dir/src/dynamixel_gui/dynamixel_gui.cpp.o
+dynamixel_gui/CMakeFiles/dynamixel_gui.dir/build.make:83: recipe for target 'dynamixel_gui/CMakeFiles/dynamixel_gui.dir/include/dynamixel_gui/moc_dynamixel_gui.cpp.o' failed
+Base path: /home/charles/devel/ros/dynamixel_gui
+Source space: /home/charles/devel/ros/dynamixel_gui/src
+Build space: /home/charles/devel/ros/dynamixel_gui/build
+Devel space: /home/charles/devel/ros/dynamixel_gui/devel
+Install space: /home/charles/devel/ros/dynamixel_gui/install
+####
+#### Running command: "make cmake_check_build_system" in "/home/charles/devel/ros/dynamixel_gui/build"
+####
+####
+#### Running command: "make -j4 -l4" in "/home/charles/devel/ros/dynamixel_gui/build"
+####
+CMakeFiles/Makefile2:1381: recipe for target 'dynamixel_gui/CMakeFiles/dynamixel_gui.dir/all' failed
+Makefile:140: recipe for target 'all' failed

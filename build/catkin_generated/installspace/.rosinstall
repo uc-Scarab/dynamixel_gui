@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/charles/devel/ros/dynamixel_gui/install/setup.sh
