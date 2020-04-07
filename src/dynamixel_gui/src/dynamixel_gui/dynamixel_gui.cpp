@@ -48,8 +48,6 @@ namespace dynamixel_gui{
 DynamixelGUI::DynamixelGUI()
   : rqt_gui_cpp::Plugin()
   , widget_(0)
-  , num_gridlines_(0)
-  , rotate_state_(ROTATE_0)
 {
   setObjectName("DynamixelGUI");
 }
@@ -67,8 +65,7 @@ void DynamixelGUI::initPlugin(qt_gui_cpp::PluginContext& context)
 
 void DynamixelGUI::shutdownPlugin()
 {
-  subscriber_.shutdown();
-  pub_mouse_left_.shutdown();
+   ; 
 }
 
 void DynamixelGUI::testConnect(){

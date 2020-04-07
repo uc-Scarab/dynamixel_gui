@@ -132,28 +132,28 @@ protected:
 
 private:
 
-  enum RotateState {
-    ROTATE_0 = 0,
-    ROTATE_90 = 1,
-    ROTATE_180 = 2,
-    ROTATE_270 = 3,
+  //enum RotateState {
+    //ROTATE_0 = 0,
+    //ROTATE_90 = 1,
+    //ROTATE_180 = 2,
+    //ROTATE_270 = 3,
 
-    ROTATE_STATE_COUNT
+    //ROTATE_STATE_COUNT
     
-  };
+  //};
 
-  void syncRotateLabel();
+  //void syncRotateLabel();
 
-  QString arg_topic_name;
-  ros::Publisher pub_mouse_left_;
+  //QString arg_topic_name;
+  //ros::Publisher pub_mouse_left_;
 
-  bool pub_topic_custom_;
+  //bool pub_topic_custom_;
 
-  QAction* hide_toolbar_action_;
+  //QAction* hide_toolbar_action_;
 
-  int num_gridlines_;
+  //int num_gridlines_;
 
-  RotateState rotate_state_;
+  //RotateState rotate_state_;
 };
 
 }
