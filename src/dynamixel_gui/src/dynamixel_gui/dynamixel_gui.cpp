@@ -57,8 +57,9 @@ void DynamixelGUI::initPlugin(qt_gui_cpp::PluginContext& context)
   widget_ = new QWidget();
   ui_.setupUi(widget_);
 
-    //ui_.motor2->setIcon(QIcon::fromTheme("document-save-as"));
-  connect(ui_.motor2, SIGNAL(valueChanged()), this, SLOT(testConnect()));
+  context.addWidget(widget_);
+
+  connect(ui_.motor2, SIGNAL(valueChanged(int)), this, SLOT(testConnect(int)));
 
 
 }
@@ -68,8 +69,8 @@ void DynamixelGUI::shutdownPlugin()
    ; 
 }
 
-void DynamixelGUI::testConnect(){
-    std::cout << "test" << std::endl;
+void DynamixelGUI::testConnect(int value){
+    std::cout << value << std::endl;
 }
 
 

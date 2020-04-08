@@ -110,7 +110,7 @@ protected slots:
   //virtual void onRotateLeft();
   //virtual void onRotateRight();
 
-  virtual void testConnect();
+  virtual void testConnect(int value);
 
 protected:
 
