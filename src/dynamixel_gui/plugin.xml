@@ -1,5 +1,5 @@
 <library path="lib/libdynamixel_gui">
-  <class name="dynamixe_gui/DynamixelGUI" type="dynamixel_gui::DynamixelGUI" base_class_type="rqt_gui_cpp::Plugin">
+  <class name="dynamixel_gui/DynamixelGUI" type="dynamixel_gui::DynamixelGUI" base_class_type="rqt_gui_cpp::Plugin">
     <description>
         A GUI to control dynamixels
     </description>

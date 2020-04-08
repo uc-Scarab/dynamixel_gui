@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 
 project(dynamixel_gui)
 # Load catkin and all dependencies required for this package
-find_package(catkin REQUIRED COMPONENTS rqt_gui rqt_gui_cpp image_transport sensor_msgs geometry_msgs cv_bridge)
+find_package(catkin REQUIRED COMPONENTS rqt_gui rqt_gui_cpp)
 
 if("${qt_gui_cpp_USE_QT_MAJOR_VERSION} " STREQUAL "5 ")
   find_package(Qt5Widgets REQUIRED)
@@ -34,7 +34,7 @@ endif()
 catkin_package(
   INCLUDE_DIRS ${dynamixel_gui_INCLUDE_DIRECTORIES}
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS rqt_gui rqt_gui_cpp image_transport sensor_msgs cv_bridge geometry_msgs
+  CATKIN_DEPENDS rqt_gui rqt_gui_cpp 
 )
 catkin_python_setup()
 
@@ -55,6 +55,9 @@ set(CMAKE_CURRENT_BINARY_DIR "${_cmake_current_binary_dir}")
 
 include_directories(${dynamixel_gui_INCLUDE_DIRECTORIES} ${catkin_INCLUDE_DIRS})
 add_library(${PROJECT_NAME} ${dynamixel_gui_SRCS} ${dynamixel_gui_MOCS} ${dynamixel_gui_UIS_H})
+
+#target_link_libraries(${PROJECT_NAM})
+
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 if("${qt_gui_cpp_USE_QT_MAJOR_VERSION} " STREQUAL "5 ")
   target_link_libraries(${PROJECT_NAME} Qt5::Widgets)
@@ -75,9 +78,9 @@ install(TARGETS ${PROJECT_NAME}
   RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
 )
 
-#catkin_install_python(PROGRAMS scripts/dynamixel_gui
-  #DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-#)
+catkin_install_python(PROGRAMS scripts/dynamixel_gui
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
