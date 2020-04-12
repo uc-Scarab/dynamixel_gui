@@ -85,3 +85,6 @@ catkin_install_python(PROGRAMS scripts/dynamixel_gui
 install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 )
+
+include_directories(include ${catkin_INCLUDE_DIRS})
+

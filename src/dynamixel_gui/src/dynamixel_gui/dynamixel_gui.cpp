@@ -31,17 +31,15 @@
  */
 
 #include <dynamixel_gui/dynamixel_gui.h>
-
 #include <pluginlib/class_list_macros.h>
 #include <ros/master.h>
-#include <sensor_msgs/image_encodings.h>
-
-#include <cv_bridge/cv_bridge.h>
-#include <opencv2/imgproc/imgproc.hpp>
+#include <std_msgs/Int16.h>
 
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QPainter>
+
+
 
 namespace dynamixel_gui{
 
@@ -59,7 +57,15 @@ void DynamixelGUI::initPlugin(qt_gui_cpp::PluginContext& context)
 
   context.addWidget(widget_);
 
-  connect(ui_.motor2, SIGNAL(valueChanged(int)), this, SLOT(testConnect(int)));
+  connect(ui_.motor2, SIGNAL(valueChanged(int)), this, SLOT(publishCallback(int)));
+
+  //ros::init(argc, argv, "dynamixel_gui");
+
+  //ros::NodeHandle n;
+  //ros::Publisher chatter_pub = n.advertise<std_msgs::String>("dynamixel_gui", 1000);
+
+  //ros::Rate loop_rate(10);
+
 
 
 }
@@ -69,8 +75,20 @@ void DynamixelGUI::shutdownPlugin()
    ; 
 }
 
-void DynamixelGUI::testConnect(int value){
-    std::cout << value << std::endl;
+void DynamixelGUI::publishCallback(int value){
+    
+    
+    std_msgs::Int16 msg;
+    msg.data = value;
+
+    //ROS_INFO("%d", msg.c_int);
+    ROS_INFO_STREAM("test " << msg);
+
+
+    //getNodeHandle().advertise<std_msgs::Int16(msg)>("dynamixel_gui", 1000);
+
+  
+    
 }
 
 
