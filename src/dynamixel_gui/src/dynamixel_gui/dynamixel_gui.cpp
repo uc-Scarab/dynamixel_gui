@@ -59,6 +59,7 @@ void DynamixelGUI::initPlugin(qt_gui_cpp::PluginContext& context)
 
   connect(ui_.motor2, SIGNAL(valueChanged(int)), this, SLOT(publishCallback(int)));
 
+    handle = getNodeHandle().advertise<std_msgs::Int16>("dynamixel_gui", 1000);
   //ros::init(argc, argv, "dynamixel_gui");
 
   //ros::NodeHandle n;
@@ -77,15 +78,14 @@ void DynamixelGUI::shutdownPlugin()
 
 void DynamixelGUI::publishCallback(int value){
     
-    
+    //std::string topicName= "dynamixel_gui"; 
     std_msgs::Int16 msg;
     msg.data = value;
 
     //ROS_INFO("%d", msg.c_int);
     ROS_INFO_STREAM("test " << msg);
 
-
-    //getNodeHandle().advertise<std_msgs::Int16(msg)>("dynamixel_gui", 1000);
+    handle.publish(msg);
 
   
     

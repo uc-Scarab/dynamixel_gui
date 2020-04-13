@@ -145,7 +145,7 @@ private:
   //void syncRotateLabel();
 
   //QString arg_topic_name;
-  //ros::Publisher pub_mouse_left_;
+  ros::Publisher handle;
 
   //bool pub_topic_custom_;
 
