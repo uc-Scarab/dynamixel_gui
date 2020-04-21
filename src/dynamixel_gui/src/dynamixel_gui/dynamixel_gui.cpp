@@ -31,9 +31,9 @@
  */
 
 #include <dynamixel_gui/dynamixel_gui.h>
+#include <dynamixel_gui/DynamixelPosition.h>
 #include <pluginlib/class_list_macros.h>
 #include <ros/master.h>
-#include <std_msgs/Int16.h>
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -59,7 +59,8 @@ void DynamixelGUI::initPlugin(qt_gui_cpp::PluginContext& context)
 
   connect(ui_.motor2, SIGNAL(valueChanged(int)), this, SLOT(publishCallback(int)));
 
-    handle = getNodeHandle().advertise<std_msgs::Int16>("dynamixel_gui", 1000);
+    handle = getNodeHandle().advertise<dynamixel_gui::DynamixelPosition>("dynamixel_gui", 1);
+  // I've put the queue at 1 so we don't end up with a massive backlog of commands to the dynamixels
   //ros::init(argc, argv, "dynamixel_gui");
 
   //ros::NodeHandle n;
@@ -77,12 +78,12 @@ void DynamixelGUI::shutdownPlugin()
 }
 
 void DynamixelGUI::publishCallback(int value){
-    
-    //std::string topicName= "dynamixel_gui"; 
-    std_msgs::Int16 msg;
-    msg.data = value;
+    dynamixel_gui::DynamixelPosition msg;
 
-    //ROS_INFO("%d", msg.c_int);
+    msg.motor_id = 2;
+    msg.position = value;
+
+
     ROS_INFO_STREAM("test " << msg);
 
     handle.publish(msg);
