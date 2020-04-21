@@ -36,8 +36,10 @@
 #include <ros/master.h>
 
 #include <QFileDialog>
+#include <QtCore/QVariant>
 #include <QMessageBox>
 #include <QPainter>
+#include <iostream>
 
 
 
@@ -52,12 +54,14 @@ DynamixelGUI::DynamixelGUI()
 
 void DynamixelGUI::initPlugin(qt_gui_cpp::PluginContext& context)
 {
-  widget_ = new QWidget();
-  ui_.setupUi(widget_);
+    widget_ = new QWidget();
+    ui_.setupUi(widget_);
 
-  context.addWidget(widget_);
+    context.addWidget(widget_);
 
-  connect(ui_.motor2, SIGNAL(valueChanged(int)), this, SLOT(publishCallback(int)));
+    connect(ui_.motor_2, SIGNAL(valueChanged(int)), this, SLOT(publishCallback(int)));
+  
+    connect(ui_.motor_3, SIGNAL(valueChanged(int)), this, SLOT(publishCallback(int)));
 
     handle = getNodeHandle().advertise<dynamixel_gui::DynamixelPosition>("dynamixel_gui", 1);
   // I've put the queue at 1 so we don't end up with a massive backlog of commands to the dynamixels
@@ -80,7 +84,15 @@ void DynamixelGUI::shutdownPlugin()
 void DynamixelGUI::publishCallback(int value){
     dynamixel_gui::DynamixelPosition msg;
 
-    msg.motor_id = 2;
+    QObject* obj = sender();
+
+    QString sender_name = obj->objectName();
+
+    //std::cout << sender_name.toInt();
+                                    
+    
+    QChar index = sender_name.at(sender_name.size() - 1);
+    msg.motor_id = index.digitValue();
     msg.position = value;
 
 
