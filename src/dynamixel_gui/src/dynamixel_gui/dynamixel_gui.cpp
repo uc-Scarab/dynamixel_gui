@@ -62,6 +62,8 @@ void DynamixelGUI::initPlugin(qt_gui_cpp::PluginContext& context)
     connect(ui_.motor_2, SIGNAL(valueChanged(int)), this, SLOT(publishCallback(int)));
   
     connect(ui_.motor_3, SIGNAL(valueChanged(int)), this, SLOT(publishCallback(int)));
+    connect(ui_.motor_4, SIGNAL(valueChanged(int)), this, SLOT(publishCallback(int)));
+    connect(ui_.motor_5, SIGNAL(valueChanged(int)), this, SLOT(publishCallback(int)));
 
     handle = getNodeHandle().advertise<dynamixel_gui::DynamixelPosition>("dynamixel_gui", 1);
   // I've put the queue at 1 so we don't end up with a massive backlog of commands to the dynamixels
