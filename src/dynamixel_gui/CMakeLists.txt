@@ -92,7 +92,7 @@ install(TARGETS ${PROJECT_NAME}
   RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
 )
 
-catkin_install_python(PROGRAMS scripts/dynamixel_gui
+catkin_install_python(PROGRAMS scripts/dynamixel_gui scripts/serial_coms.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
