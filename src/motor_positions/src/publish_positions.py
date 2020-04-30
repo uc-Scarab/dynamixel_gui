@@ -1,5 +1,8 @@
+#!/usr/bin/python
+import rospy
 import serial
-import pdb
+from dynamixel_gui.msg import DynamixelPosition
+# import pdb
 
 arduino = serial.Serial("/dev/ttyUSB1")
 arduino.baudrate = 115200
