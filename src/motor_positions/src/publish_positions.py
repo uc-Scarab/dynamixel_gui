@@ -2,22 +2,40 @@
 import rospy
 import serial
 from dynamixel_gui.msg import DynamixelPosition
-# import pdb
+import pdb
 
-arduino = serial.Serial("/dev/ttyUSB1")
-arduino.baudrate = 115200
 
-while True:
-    # motor_2 = arduino.read(2)
-    # motor_3 = arduino.read(2)
-    # motor_4 = arduino.read(2)
-    # motor_5 = arduino.read(2)
+def publisher():
+    arduino = serial.Serial("/dev/ttyUSB1")
+    arduino.baudrate = 115200
+    pub = rospy.Publisher("motor_positions", DynamixelPosition, queue_size=1)
+    rospy.init_node("current_positions", anonymous=True)
+    rate = rospy.Rate(0.1)
 
-    raw = str(arduino.readline())
+    while not rospy.is_shutdown():
+        # motor_2 = arduino.read(2)
+        # motor_3 = arduino.read(2)
+        # motor_4 = arduino.read(2)
+        # motor_5 = arduino.read(2)
 
-    motor_positions = list(map(int, raw[2:-5].split(",")))
-    # pdb.set_trace()
+        raw = str(arduino.readline())
+        motor_positions = list(map(int, raw[2:-5].split(",")))
 
-    print(motor_positions)
+        positions = DynamixelPosition()
 
-    # pdb.set_trace()
+        positions.motor_2 = motor_positions[0]
+        positions.motor_3 = motor_positions[1]
+        positions.motor_4 = motor_positions[2]
+        positions.motor_5 = motor_positions[3]
+
+        pdb.set_trace()
+        rospy.loginfo(positions)
+        pub.publish(positions)
+        rate.sleep()
+
+
+if __name__ == "__main__":
+    try:
+        publisher()
+    except rospy.ROSInterruptException:
+        pass
