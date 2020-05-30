@@ -110,7 +110,7 @@ protected slots:
   //virtual void onRotateLeft();
   //virtual void onRotateRight();
 
-  virtual void publishCallback(int value);
+  virtual void publishCallback();
 
 protected:
 

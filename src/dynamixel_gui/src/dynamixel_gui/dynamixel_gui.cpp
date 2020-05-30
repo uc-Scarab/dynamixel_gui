@@ -59,11 +59,11 @@ void DynamixelGUI::initPlugin(qt_gui_cpp::PluginContext& context)
 
     context.addWidget(widget_);
 
-    connect(ui_.motor_2, SIGNAL(valueChanged(int)), this, SLOT(publishCallback(int)));
+    connect(ui_.motor_2, SIGNAL(sliderReleased()), this, SLOT(publishCallback()));
   
-    connect(ui_.motor_3, SIGNAL(valueChanged(int)), this, SLOT(publishCallback(int)));
-    connect(ui_.motor_4, SIGNAL(valueChanged(int)), this, SLOT(publishCallback(int)));
-    connect(ui_.motor_5, SIGNAL(valueChanged(int)), this, SLOT(publishCallback(int)));
+    connect(ui_.motor_3, SIGNAL(sliderReleased()), this, SLOT(publishCallback()));
+    connect(ui_.motor_4, SIGNAL(sliderReleased()), this, SLOT(publishCallback()));
+    connect(ui_.motor_5, SIGNAL(sliderReleased()), this, SLOT(publishCallback()));
 
     handle = getNodeHandle().advertise<dynamixel_gui::DynamixelPosition>("dynamixel_gui", 1);
   // I've put the queue at 1 so we don't end up with a massive backlog of commands to the dynamixels
@@ -83,20 +83,22 @@ void DynamixelGUI::shutdownPlugin()
    ; 
 }
 
-void DynamixelGUI::publishCallback(int value){
+void DynamixelGUI::publishCallback(){
     dynamixel_gui::DynamixelPosition msg;
 
-    QObject* obj = sender();
+    QObject* object = sender();
 
-    QString sender_name = obj->objectName();
+    QString sender_name = object->objectName();
+    
+    QSlider* slider = qobject_cast<QSlider*>(sender());
 
     //std::cout << sender_name.toInt();
                                     
     
     QChar index = sender_name.at(sender_name.size() - 1);
+    //msg.motor_2 = index.digitValue();
     msg.motor_id = index.digitValue();
-    msg.position = value;
-
+    msg.position = slider->sliderPosition();
 
     ROS_INFO_STREAM("test " << msg);
 

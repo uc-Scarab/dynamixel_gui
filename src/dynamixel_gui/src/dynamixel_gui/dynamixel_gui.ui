@@ -129,25 +129,19 @@
     <number>4095</number>
    </property>
   </widget>
+  <widget class="QSpinBox" name="spinBox_5">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>40</y>
+     <width>48</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections>
-  <connection>
-   <sender>motor_2</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>spinBox</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>199</x>
-     <y>95</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>133</x>
-     <y>100</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>motor_3</sender>
    <signal>valueChanged(int)</signal>
@@ -193,6 +187,22 @@
     <hint type="destinationlabel">
      <x>138</x>
      <y>216</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>motor_2</sender>
+   <signal>sliderMoved(int)</signal>
+   <receiver>spinBox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>122</x>
+     <y>79</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>37</x>
+     <y>82</y>
     </hint>
    </hints>
   </connection>
