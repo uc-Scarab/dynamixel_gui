@@ -8,7 +8,8 @@ project(motor_positions)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  rospy
+  roscpp
+  serial
 )
 
 ## System dependencies are found with CMake's conventions
@@ -103,7 +104,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES motor_positions
-#  CATKIN_DEPENDS rospy
+#  CATKIN_DEPENDS roscpp serial
 #  DEPENDS system_lib
 )
 
@@ -202,3 +203,7 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+add_executable(publish_positions src/publish_positions)
+target_link_libraries(publish_positions ${catkin_LIBRARIES})
+add_dependencies(publish_positions roscpp serial)
