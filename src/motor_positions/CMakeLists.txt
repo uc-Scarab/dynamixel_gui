@@ -106,7 +106,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES motor_positions
-  CATKIN_DEPENDS roscpp serial message_generation
+  CATKIN_DEPENDS roscpp serial message_generation message_runtime
 #  DEPENDS system_lib
 )
 
@@ -208,4 +208,4 @@ include_directories(
 
 add_executable(publish_positions src/publish_positions)
 target_link_libraries(publish_positions ${catkin_LIBRARIES})
-add_dependencies(publish_positions roscpp serial dynamixel_gui, std_msgs, message_generation)
+add_dependencies(publish_positions roscpp serial dynamixel_gui, std_msgs, message_generation ${catkin_EXPORTED_TARGETS})
