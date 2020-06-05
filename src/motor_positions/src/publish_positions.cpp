@@ -1,8 +1,14 @@
 #include <string>
 #include <iostream>
 #include <cstdio>
-#include <unistd.h>
 #include "serial/serial.h"
+// OS Specific sleep
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif
+
 #include "ros/ros.h"
 #include <sstream>
 #include <motor_positions/MotorPositions.h>
@@ -57,9 +63,6 @@ int run(int argc, char **argv){
     msg.position_5 = positions[3];
 
     publish.publish(msg);    
-
-
-    
     }
     }
 
