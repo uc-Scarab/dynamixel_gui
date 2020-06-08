@@ -28,15 +28,42 @@ int run(int argc, char **argv){
     ros::init(argc, argv, "publish_positions");
     ros::NodeHandle node;
     ros::Publisher publish = node.advertise<motor_positions::MotorPositions>("publish_positions", 1);
-    std::string port = "/dev/ttyACM0";
+    std::string vid_pid = "2341:0043"; 
+    std::string port;
+
+    std::vector<serial::PortInfo> devices_found = serial::list_ports();
+    std::vector<serial::PortInfo>::iterator iter = devices_found.begin();
+
+    while( iter != devices_found.end()){
+        serial::PortInfo device = *iter++;
+        //std::cout << "hids" << device.hardware_id << std::endl;
+        if (device.hardware_id != "n/a"){
+        std::string ids = device.hardware_id.substr(12, 10);
+        //std::cout << "hardware:" << device.hardware_id << std::endl;
+        std::cout << "vid_pid:" << vid_pid << std::endl;
+        std::cout << "ids:" << ids << std::endl;
+        //std::cout << "port:" << device.port << std::endl;
+        //std::cout << "length" << device.hardware_id.length() << std::endl;
+        //std::cout << "substring length" << ids.length() << std::endl;
+        if (ids.compare(vid_pid)){
+            port = device.port;
+        }
+        }
+
+    }
+
+
+    std::cout << "Port:" << port << std::endl;
     unsigned long baud = 115200;
 
     serial::Serial arduino(port, baud, serial::Timeout::simpleTimeout(1000));
+
     if(arduino.isOpen())
         std::cout << "Yes." << std::endl;
     else
         std::cout << " No." << std::endl;
 
+    
 
     while(1){
             uint8_t data_buffer[12];
