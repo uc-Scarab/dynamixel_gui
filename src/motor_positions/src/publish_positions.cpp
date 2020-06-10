@@ -81,7 +81,7 @@ int run(int argc, char **argv){
         arduino.read(check_buffer, 3);
         uint16_t is_start = INT_JOIN_BYTE(check_buffer[0], check_buffer[1]);
         //std::cout << is_start << std::endl;
-        std::cout << int(check_buffer[2]) << std::endl;
+        //std::cout << int(check_buffer[2]) << std::endl;
         if(is_start == 60000){
             //std::cout << "is_start" << std::endl;
             int payload = check_buffer[2]; 
@@ -94,7 +94,6 @@ int run(int argc, char **argv){
         int positions[messages/3];
 
         for(int i=0;i<payload-3;i+=3){
-            ROS_INFO("test");
             int id = int(message_buffer[i]);
             ROS_INFO_STREAM("Motor ID:" << id);
         uint16_t full_byte = INT_JOIN_BYTE(int(message_buffer[i + 1]), int(message_buffer[i + 2])); 
@@ -107,9 +106,10 @@ int run(int argc, char **argv){
             //std::cout << i << " " <<int(message_buffer[i]) << std::endl;
         //}
 
-        if (int(message_buffer[3] != 244)){
+        if (int(message_buffer[messages] != 244)){
             arduino.flushInput();
-            std::cout << "flush";
+            std::cout << "flush" << std::endl;
+            std::cout << int(message_buffer[messages]) << std::endl;
         }
 
         //for(int i=0; i<payload/3;i++){
