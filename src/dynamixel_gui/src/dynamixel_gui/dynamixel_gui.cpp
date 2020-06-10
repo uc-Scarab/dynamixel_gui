@@ -54,7 +54,7 @@ DynamixelGUI::DynamixelGUI()
 
 void DynamixelGUI::initPlugin(qt_gui_cpp::PluginContext& context)
 {
-    widget_ = new QWidget();
+    //widget_ = new QWidget();
     ui_.setupUi(widget_);
 
     context.addWidget(widget_);
@@ -103,11 +103,8 @@ void DynamixelGUI::publishCallback(){
     ROS_INFO_STREAM("test " << msg);
 
     handle.publish(msg);
-
-  
     
 }
-
 
 
 
