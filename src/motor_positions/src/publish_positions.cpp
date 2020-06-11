@@ -76,48 +76,76 @@ int run(int argc, char **argv){
 
    //arduino.write(first, 6);
 
+    bool alt = true;
+
     while(1){
-        uint8_t check_buffer[3];
-        arduino.read(check_buffer, 3);
-        uint16_t is_start = INT_JOIN_BYTE(check_buffer[0], check_buffer[1]);
-        //std::cout << is_start << std::endl;
-        //std::cout << int(check_buffer[2]) << std::endl;
-        if(is_start == 60000){
-            //std::cout << "is_start" << std::endl;
-            int payload = check_buffer[2]; 
-            uint8_t message_buffer[payload];
-            arduino.read(message_buffer, payload);
+        //uint8_t check_buffer[3];
+        //arduino.read(check_buffer, 3);
+        //uint16_t is_start = INT_JOIN_BYTE(check_buffer[0], check_buffer[1]);
+        ////std::cout << is_start << std::endl;
+        ////std::cout << int(check_buffer[2]) << std::endl;
+        //if(is_start == 60000){
+            ////std::cout << "is_start" << std::endl;
+            //int payload = check_buffer[2]; 
+            //uint8_t message_buffer[payload];
+            //arduino.read(message_buffer, payload);
 
-        motor_positions::MotorPositions msg;
-        int messages = payload - 1;
-        int ids[messages/3];
-        int positions[messages/3];
+        //motor_positions::MotorPositions msg;
+        //int messages = payload - 1;
+        //int ids[messages/3];
+        //int positions[messages/3];
 
-        for(int i=0;i<payload-3;i+=3){
-            int id = int(message_buffer[i]);
-            ROS_INFO_STREAM("Motor ID:" << id);
-        uint16_t full_byte = INT_JOIN_BYTE(int(message_buffer[i + 1]), int(message_buffer[i + 2])); 
-        int position = int(full_byte);
-        positions[i] = position;
-            ROS_INFO_STREAM("Position:" << position); 
-        }
-
-        //for(int i=0; i<payload; i++){
-            //std::cout << i << " " <<int(message_buffer[i]) << std::endl;
+        //for(int i=0;i<payload-3;i+=3){
+            //int id = int(message_buffer[i]);
+            //ROS_INFO_STREAM("Motor ID:" << id);
+        //uint16_t full_byte = INT_JOIN_BYTE(int(message_buffer[i + 1]), int(message_buffer[i + 2])); 
+        //int position = int(full_byte);
+        //positions[i] = position;
+            //ROS_INFO_STREAM("Position:" << position); 
         //}
 
-        if (int(message_buffer[messages] != 244)){
-            arduino.flushInput();
-            std::cout << "flush" << std::endl;
-            std::cout << int(message_buffer[messages]) << std::endl;
-        }
+        ////for(int i=0; i<payload; i++){
+            ////std::cout << i << " " <<int(message_buffer[i]) << std::endl;
+        ////}
+
+        //if (int(message_buffer[messages] != 244)){
+            //arduino.flushInput();
+            //std::cout << "flush" << std::endl;
+            //std::cout << int(message_buffer[messages]) << std::endl;
+        //}
 
         //for(int i=0; i<payload/3;i++){
             //msg.motor_id = ids[i];
             //msg.position = positions[i];
             //publish.publish(msg);
         //}
-        //uint8_t out[payload + 3];
+
+        uint8_t alt_buffer[7];
+
+        alt_buffer[0] = LOWER_BYTE(60000);
+        alt_buffer[1] = UPPER_BYTE(60000);
+        alt_buffer[2] = 4;
+        alt_buffer[3] = 2;
+        alt_buffer[4] = LOWER_BYTE(1000);
+        alt_buffer[5] = UPPER_BYTE(1000);
+        alt_buffer[6] = 244;
+
+        //std::cout << "lower:" << int(alt_buffer[0]) << std::endl;
+        //std::cout << "higher" << int(alt_buffer[1]) << std::endl;
+
+        arduino.write(alt_buffer, 7);
+
+        uint8_t test[2];
+        arduino.read(test, 2);
+        uint16_t check = INT_JOIN_BYTE(test[1], test[0]);
+
+        if (int(test[0]) != 60000){
+            arduino.flushInput();
+        }
+
+        std::cout << int(check) << std::endl;
+        
+
         //out[0] = LOWER_BYTE(65336);
         //out[1] = UPPER_BYTE(65336);
         //out[2] = payload;
@@ -133,7 +161,8 @@ int run(int argc, char **argv){
         
 
 
-        }
+        //}
+        
     }
 }
 
