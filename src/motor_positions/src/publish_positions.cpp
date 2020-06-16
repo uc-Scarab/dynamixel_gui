@@ -137,11 +137,11 @@ int run(int argc, char **argv){
 
         uint8_t out_message[7];
         out_message[0] = LOWER_BYTE(60000);
-        out_message[1] = HIGHER_BYTE(60000);
+        out_message[1] = UPPER_BYTE(60000);
         out_message[2] = 4;
         out_message[3] = 2;
         out_message[4] = LOWER_BYTE(1000);
-        out_message[5] = HIGHER_BYTE(1000);
+        out_message[5] = UPPER_BYTE(1000);
         out_message[6] = 244;
         
         if(arduino.available() >= 3){
