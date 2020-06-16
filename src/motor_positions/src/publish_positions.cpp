@@ -39,16 +39,8 @@ int run(int argc, char **argv){
 
     while(iter != devices_found.end()){
         serial::PortInfo device = *iter++;
-        //std::cout << "hids" << device.hardware_id << std::endl;
         if (device.hardware_id != "n/a"){
         std::string ids = device.hardware_id.substr(12, 10);
-        //std::cout << "hardware:" << device.hardware_id << std::endl;
-        //std::cout << "description:" << device.description << std::endl;
-        //std::cout << "vid_pid:" << vid_pid << std::endl;
-        //std::cout << "ids:" << ids << std::endl;
-        ////std::cout << "port:" << device.port << std::endl;
-        //std::cout << "length" << device.hardware_id.length() << std::endl;
-        //std::cout << "substring length" << ids.length() << std::endl;
         if (ids.compare(vid_pid)){
             port = device.port;
         }
@@ -67,55 +59,8 @@ int run(int argc, char **argv){
     else
         std::cout << " No." << std::endl;
 
-   //uint8_t first[6]; 
-   //first[0] = LOWER_BYTE(60000);
-   //first[1] = UPPER_BYTE(60000);
-   //first[2] = 3;
-   //first[3] = LOWER_BYTE(3000);
-   //first[4] = UPPER_BYTE(3000);
-   //first[5] = 244;
-
-   //arduino.write(first, 6);
-
-    //uint8_t alt_buffer[7];
-
-    //alt_buffer[0] = LOWER_BYTE(60000);
-    //alt_buffer[1] = UPPER_BYTE(60000);
-    ////alt_buffer[2] = 4;
-    //alt_buffer[3] = 2;
-    //alt_buffer[4] = LOWER_BYTE(1000);
-    //alt_buffer[5] = UPPER_BYTE(1000);
-    //alt_buffer[6] = 244;
-
-        //std::cout << "lower:" << int(alt_buffer[0]) << std::endl;
-        //std::cout << "higher" << int(alt_buffer[1]) << std::endl;
-
-        //arduino.write(alt_buffer, 7);
-
-    //bool alt = true;
-    while(1){
-
-        //uint8_t out_message[7];
-        //out_message[0] = LOWER_BYTE(60000);
-        //out_message[1] = UPPER_BYTE(60000);
-        //out_message[2] = 4;
-        //out_message[3] = 5;
-
-        //int position;
-        //if(alt){
-            //position = 1000;
-        //} else {
-            //position = 2000;
-        //}
-
-        //alt = !alt;
-
-        //out_message[4] = LOWER_BYTE(position);
-        //out_message[5] = UPPER_BYTE(position);
-        //out_message[6] = 244;
-
-        //arduino.write(out_message, 7);
-        
+   while(1){
+       
         if(arduino.available() >= 3){
             uint8_t check_buffer[3];
             arduino.read(check_buffer, 3);
