@@ -11,7 +11,9 @@
 
 #include "ros/ros.h"
 #include <sstream>
-#include <motor_positions/MotorPositions.h>
+#include <motor_positions/motorPosition.h>
+#include <motor_positions/positionArray.h>
+
 using std::cout;
 
 
@@ -30,7 +32,7 @@ void my_sleep(unsigned long milliseconds){
 int run(int argc, char **argv){
     ros::init(argc, argv, "publish_positions");
     ros::NodeHandle node;
-    ros::Publisher publish = node.advertise<motor_positions::MotorPositions>("publish_positions", 1);
+    ros::Publisher publish = node.advertise<motor_positions::positionArray>("publish_positions", 1);
     std::string vid_pid = "2341:0043"; 
     std::string port;
 
@@ -71,15 +73,27 @@ int run(int argc, char **argv){
                 cout << "flushed" << std::endl;
                 
                 } else {
+                    motor_positions::motorPosition motor;
+                    motor_positions::positionArray msg; 
                     int payload = int(check_buffer[2]);
                     uint8_t message_buffer[payload];
                     arduino.read(message_buffer, payload);
 
                     for(int i=0;i<payload -3;i+=3){
-                        cout << "id:" << int(message_buffer[i]) << std::endl;
+                        //cout << "id:" << int(message_buffer[i]) << std::endl;
+                        int int_id = int(message_buffer[i]);
+                        ROS_INFO_STREAM("id:" << int_id);
+                        motor.motor_id = message_buffer[i];
                         uint16_t full_byte = INT_JOIN_BYTE(message_buffer[i + 2], message_buffer[i + 1]);
-                        cout << "position" << int(full_byte) << std::endl;
-                        cout << "---------" << std::endl;
+                        //cout << "position" << int(full_byte) << std::endl;
+                        //cout << "---------" << std::endl;
+                        int int_full_byte = int(full_byte);
+                        ROS_INFO_STREAM("position" << int_full_byte);
+                        motor.position = full_byte;
+                        msg.positions.push_back(motor);
+                    
+                    publish.publish(msg);
+
                     }
 
                     if (message_buffer[payload - 1] != 244){
