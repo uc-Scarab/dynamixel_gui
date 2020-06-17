@@ -53,6 +53,7 @@ find_package(catkin REQUIRED COMPONENTS
    FILES
    motorPosition.msg
    positionArray.msg
+   controlTable.msg 
  )
 
 ## Generate services in the 'srv' folder
@@ -209,4 +210,8 @@ include_directories(
 
 add_executable(publish_positions src/publish_positions)
 target_link_libraries(publish_positions ${catkin_LIBRARIES})
-add_dependencies(publish_positions roscpp serial dynamixel_gui, std_msgs, message_generation ${catkin_EXPORTED_TARGETS})
+add_dependencies(publish_positions roscpp serial std_msgs, message_generation ${catkin_EXPORTED_TARGETS})
+
+add_executable(send_control src/send_control)
+target_link_libraries(send_control ${catkin_LIBRARIES})
+add_dependencies(send_control roscpp serial ${catkin_EXPORTED_TARGETS})
