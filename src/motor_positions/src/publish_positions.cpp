@@ -28,8 +28,8 @@ class SerialComs {
     public:
         serial::Serial arduino;
         ros::NodeHandle node;
-        SerialComs() {
-    ros::NodeHandle node;
+        SerialComs(ros::NodeHandle out_node) {
+        node = out_node;
     std::string vid_pid = "2341:0043"; 
     std::string port;
 
@@ -149,7 +149,8 @@ void run(){
 
 int main(int argc, char**argv){
     ros::init(argc, argv, "publish_positions");
-    SerialComs serial(); 
+    ros::NodeHandle node;
+    SerialComs serial(node); 
 
     boost::thread(&SerialComs::run, &serial);
     boost::thread(&SerialComs::subscribe, &serial);
