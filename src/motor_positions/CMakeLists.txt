@@ -10,7 +10,6 @@ project(motor_positions)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   serial
-  dynamixel_gui
   std_msgs
   message_generation
 )
