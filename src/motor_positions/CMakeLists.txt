@@ -214,3 +214,7 @@ add_dependencies(publish_positions roscpp serial std_msgs, message_generation ${
 add_executable(send_control src/send_control)
 target_link_libraries(send_control ${catkin_LIBRARIES})
 add_dependencies(send_control roscpp serial ${catkin_EXPORTED_TARGETS})
+
+add_executable(test_subscribe src/test_subscribe)
+target_link_libraries(test_subscribe ${catkin_LIBRARIES})
+add_dependencies(test_subscribe roscpp serial ${catkin_EXPORTED_TARGETS})
