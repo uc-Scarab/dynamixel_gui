@@ -28,12 +28,15 @@ class SerialComs {
     public:
         serial::Serial write_serial;
         serial::Serial read_serial;
-
         ros::NodeHandle node;
+        std::string port;
+        int baud;
+
         SerialComs(ros::NodeHandle out_node) {
         node = out_node;
     std::string vid_pid = "2341:0043"; // vid/pid for an Arduino Uno
-    std::string diff = "CP2102"; // if the description contains uart its what we want instead of the coms cable.
+    std::string teensy = "16c0:0483";
+    //std::string diff = "CP2102"; // if the description contains uart its what we want instead of the coms cable.
     std::string port;
 
     std::vector<serial::PortInfo> devices_found = serial::list_ports();
@@ -41,9 +44,11 @@ class SerialComs {
 
     while(iter != devices_found.end()){
         serial::PortInfo device = *iter++;
+        std::cout << "id" << device.hardware_id << std::endl;
+
         if (device.hardware_id != "n/a"){
         std::string ids = device.hardware_id.substr(12, 10);
-        if (ids.compare(vid_pid) && (device.description.find(diff)!= std::string::npos)){
+        if (ids.compare(vid_pid) or ids.compare(teensy)){
             port = device.port;
             std::cout << "description:" << device.description << std::endl;
         }
@@ -55,19 +60,19 @@ class SerialComs {
     std::cout << "Port:" << port << std::endl;
     unsigned long baud = 115200;
 
-    serial::Serial read_serial(port, baud, serial::Timeout::simpleTimeout(1000));
-    serial::Serial write_serial(port, baud, serial::Timeout::simpleTimeout(1000));
-    //this->arduino = arduino;
+    //serial::Serial read_serial(port, baud, serial::Timeout::simpleTimeout(1000));
+    //serial::Serial write_serial(port, baud, serial::Timeout::simpleTimeout(1000));
+    //arduino = arduino;
 
-    if(read_serial.isOpen())
-        std::cout << "read open." << std::endl;
-    else
-        std::cout << "read not open." << std::endl;
+    //if(read_serial.isOpen())
+        //std::cout << "read open." << std::endl;
+    //else
+        //std::cout << "read not open." << std::endl;
 
-    if(write_serial.isOpen())
-        std::cout << "write open." << std::endl;
-    else
-        std::cout << "write not open." << std::endl;
+    //if(write_serial.isOpen())
+        //std::cout << "write open." << std::endl;
+    //else
+        //std::cout << "write not open." << std::endl;
 
 
 
@@ -94,28 +99,37 @@ class SerialComs {
     //control_buffer[6] = UPPER_BYTE(msg.value);
     //control_buffer[7] = 244;
 
-    //this->arduino.write(control_buffer, 8);
+    //arduino.write(control_buffer, 8);
 
     
 }
 
 void subscribe(){
-     ros::Subscriber sub = this->node.subscribe("dynamixel_control", 1000, &SerialComs::controlCallback, this);
+     ros::Subscriber sub = node.subscribe("dynamixel_control", 1000, &SerialComs::controlCallback, this);
      ros::spin();
 }
 
 void run(){
-   ros::Publisher publish = this->node.advertise<motor_positions::positionArray>("publish_positions", 1);
+   ros::Publisher publisher = node.advertise<motor_positions::positionArray>("publisher_positions", 1);
+   std::string port = "/dev/ttyACM0";
+   int baud = 115200;
+  
+    serial::Serial read_serial(port, baud, serial::Timeout::simpleTimeout(1000));
+
    while(1){
-       //std::cout << "running" << std::endl;
-       
-        if(this->read_serial.available() >= 3){
+
+       //std::cout << "open?:" << read_serial.isOpen() << std::endl;
+        //uint8_t test_buffer[3];
+        //read_serial.read(test_buffer, 3);
+        //std::cout << "available:" << read_serial.available() << std::endl;
+
+        if(read_serial.available() >= 3){
             uint8_t check_buffer[3];
-            this->read_serial.read(check_buffer, 3);
+            read_serial.read(check_buffer, 3);
             uint16_t check = INT_JOIN_BYTE(check_buffer[1], check_buffer[0]);
-                //cout << "check:" << check << std::endl;
+                cout << "check:" << check << std::endl;
                 if(int(check) != 60000){
-                this->read_serial.flushInput();
+                read_serial.flushInput();
                 cout << "flushed" << std::endl;
                 
                 } else {
@@ -123,7 +137,7 @@ void run(){
                     motor_positions::positionArray msg; 
                     int payload = int(check_buffer[2]);
                     uint8_t message_buffer[payload];
-                    this->read_serial.read(message_buffer, payload);
+                    read_serial.read(message_buffer, payload);
 
                     for(int i=0;i<payload -3;i+=3){
                         //cout << "id:" << int(message_buffer[i]) << std::endl;
@@ -138,12 +152,12 @@ void run(){
                         motor.position = full_byte;
                         msg.positions.push_back(motor);
                     
-                    publish.publish(msg);
+                    publisher.publish(msg);
 
                     }
 
                     if (message_buffer[payload - 1] != 244){
-                    this->read_serial.flushInput();
+                    read_serial.flushInput();
                     }
         }
                     
@@ -159,6 +173,7 @@ void run(){
 
 
 int main(int argc, char**argv){
+    try{
     ros::init(argc, argv, "publish_positions");
     ros::NodeHandle node;
     SerialComs read_serial(node); 
@@ -169,6 +184,9 @@ int main(int argc, char**argv){
     //boost::thread write(&SerialComs::subscribe, &read_serial);
     read.join();
     //write.join();
-
+    } catch(const std::exception& ex){
+        std::cout << ex.what() << std::endl;
+    }
     return 0;
+    
 }

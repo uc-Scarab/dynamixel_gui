@@ -4,9 +4,14 @@
 
 using std::cout;
 
+int main(int argc, char**argv){
 
-void run(ros::NodeHandle node ){
+    ros::init(argc, argv, "dynamixel_control");
+
+   ros::NodeHandle node;
+
    ros::Publisher publish = node.advertise<motor_positions::controlTable>("dynamixel_control", 1);
+    while(1){
     
 
      
@@ -17,16 +22,7 @@ void run(ros::NodeHandle node ){
     msg.value = 1;
 
     publish.publish(msg);
-
-       }
-                    
-          
-
-
-int main(int argc, char**argv){
-    ros::init(argc, argv, "dynamixel_control");
-    ros::NodeHandle node;
+    }
  
-    run(node);
     return 0;
 }
