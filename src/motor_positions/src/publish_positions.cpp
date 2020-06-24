@@ -88,18 +88,22 @@ class SerialComs {
     }
 
     void controlCallback(motor_positions::controlTable msg){
-     ROS_INFO("working");   
-    //uint8_t control_buffer[8];
+     ROS_INFO_STREAM(msg);
+        std::string port = "/dev/ttyACM0";
+        int baud = 115200;
+     serial::Serial read_serial(port, baud, serial::Timeout::simpleTimeout(1000));
 
-    //control_buffer[0] = LOWER_BYTE(60000); control_buffer[1] = UPPER_BYTE(60000);
-    //control_buffer[2] = 5;
-    //control_buffer[3] = msg.motor_id;
-    //control_buffer[4] = msg.command_id;
-    //control_buffer[5] = LOWER_BYTE(msg.value);
-    //control_buffer[6] = UPPER_BYTE(msg.value);
-    //control_buffer[7] = 244;
+    uint8_t control_buffer[8];
 
-    //arduino.write(control_buffer, 8);
+    control_buffer[0] = LOWER_BYTE(60000); control_buffer[1] = UPPER_BYTE(60000);
+    control_buffer[2] = 5;
+    control_buffer[3] = msg.motor_id;
+    control_buffer[4] = msg.command_id;
+    control_buffer[5] = LOWER_BYTE(msg.value);
+    control_buffer[6] = UPPER_BYTE(msg.value);
+    control_buffer[7] = 244;
+
+    read_serial.write(control_buffer, 8);
 
     
 }
@@ -109,12 +113,9 @@ void subscribe(){
      ros::spin();
 }
 
-void run(){
+void run(int baud, std::string port){
    ros::Publisher publisher = node.advertise<motor_positions::positionArray>("publisher_positions", 1);
-   std::string port = "/dev/ttyACM0";
-   int baud = 115200;
-  
-    serial::Serial read_serial(port, baud, serial::Timeout::simpleTimeout(1000));
+       serial::Serial read_serial(port, baud, serial::Timeout::simpleTimeout(1000));
 
    while(1){
 
@@ -148,7 +149,7 @@ void run(){
                         //cout << "position" << int(full_byte) << std::endl;
                         //cout << "---------" << std::endl;
                         int int_full_byte = int(full_byte);
-                        ROS_INFO_STREAM("position" << int_full_byte);
+                        ROS_INFO_STREAM("position:" << int_full_byte);
                         motor.position = full_byte;
                         msg.positions.push_back(motor);
                     
@@ -179,8 +180,11 @@ int main(int argc, char**argv){
     SerialComs read_serial(node); 
     //SerialsComs write_serial(node);
     
+    std::string port = "/dev/ttyACM0";
+    int baud = 115200;
+  
 
-    boost::thread read(&SerialComs::run, &read_serial);
+    boost::thread read(&SerialComs::run, &read_serial, baud, port);
     //boost::thread write(&SerialComs::subscribe, &read_serial);
     read.join();
     //write.join();
