@@ -1,7 +1,9 @@
+#include <ostream>
 #include <string>
 #include <iostream>
 #include <cstdio>
 #include "serial/serial.h"
+
 // OS Specific sleep
 #ifdef _WIN32
 #include <windows.h>
@@ -21,7 +23,6 @@
 #define LOWER_BYTE(b) (b & 0xff)
 #define INT_JOIN_BYTE(u, l) (u << 8) | l
 
-
 using std::cout;
 
 class SerialComs {
@@ -30,7 +31,7 @@ class SerialComs {
         serial::Serial read_serial;
         ros::NodeHandle node;
         std::string port;
-        int baud;
+        //int baud;
 
         SerialComs(ros::NodeHandle out_node) {
         node = out_node;
@@ -58,7 +59,7 @@ class SerialComs {
 
 
     std::cout << "Port:" << port << std::endl;
-    unsigned long baud = 115200;
+    //unsigned long baud = 115200;
 
     //serial::Serial read_serial(port, baud, serial::Timeout::simpleTimeout(1000));
     //serial::Serial write_serial(port, baud, serial::Timeout::simpleTimeout(1000));
@@ -88,6 +89,7 @@ class SerialComs {
     }
 
     void controlCallback(motor_positions::controlTable msg){
+        std::cout << "test" << std::endl;   
      ROS_INFO_STREAM(msg);
         std::string port = "/dev/ttyACM0";
         int baud = 115200;
@@ -95,7 +97,8 @@ class SerialComs {
 
     uint8_t control_buffer[8];
 
-    control_buffer[0] = LOWER_BYTE(60000); control_buffer[1] = UPPER_BYTE(60000);
+    control_buffer[0] = LOWER_BYTE(60000); 
+    control_buffer[1] = UPPER_BYTE(60000);
     control_buffer[2] = 5;
     control_buffer[3] = msg.motor_id;
     control_buffer[4] = msg.command_id;
@@ -181,13 +184,13 @@ int main(int argc, char**argv){
     //SerialsComs write_serial(node);
     
     std::string port = "/dev/ttyACM0";
-    int baud = 115200;
+    //int baud = 115200;
   
 
-    boost::thread read(&SerialComs::run, &read_serial, baud, port);
-    //boost::thread write(&SerialComs::subscribe, &read_serial);
-    read.join();
-    //write.join();
+    //boost::thread read(&SerialComs::run, &read_serial, baud, port);
+    boost::thread write(&SerialComs::subscribe, &read_serial);
+    //read.join();
+    write.join();
     } catch(const std::exception& ex){
         std::cout << ex.what() << std::endl;
     }

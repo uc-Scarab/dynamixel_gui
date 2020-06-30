@@ -12,22 +12,23 @@ int main(int argc, char**argv){
 
    ros::Publisher publish = node.advertise<motor_positions::controlTable>("dynamixel_control", 1);
 
-   bool alt = true;
+   //bool alt = true;
     while(1){
     
 
      
     motor_positions::controlTable msg;
 
-    msg.motor_id = 5;
-    msg.command_id = 30;
-    if(alt){
-    msg.value = 500;
-    } else {
-        msg.value = 3500;
+    for(int i = 0; i<6; i++){
+        msg.motor_id = 2;
+        msg.command_id = 30;
+        msg.value = 2048;
+        
+
+
     }
 
-    alt = !alt;
+        //alt = !alt;
 
     publish.publish(msg);
     ROS_INFO_STREAM(msg);
