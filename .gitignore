@@ -3,3 +3,4 @@ devel/
 script.sh
 out.txt
 */venv/
+.clangd/

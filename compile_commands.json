@@ -1,0 +1,82 @@
+[
+{
+  "directory": "/home/charles/devel/ros/scarab_ros/build/gtest/googlemock",
+  "command": "/usr/bin/c++  -DGTEST_CREATE_SHARED_LIBRARY=1 -Dgmock_main_EXPORTS -I/usr/src/googletest/googlemock/include -I/usr/src/googletest/googlemock -I/usr/src/googletest/googletest/include -I/usr/src/googletest/googletest  -fPIC    -Wall -Wshadow -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o CMakeFiles/gmock_main.dir/__/googletest/src/gtest-all.cc.o -c /usr/src/googletest/googletest/src/gtest-all.cc",
+  "file": "/usr/src/googletest/googletest/src/gtest-all.cc"
+},
+{
+  "directory": "/home/charles/devel/ros/scarab_ros/build/gtest/googlemock",
+  "command": "/usr/bin/c++  -DGTEST_CREATE_SHARED_LIBRARY=1 -Dgmock_main_EXPORTS -I/usr/src/googletest/googlemock/include -I/usr/src/googletest/googlemock -I/usr/src/googletest/googletest/include -I/usr/src/googletest/googletest  -fPIC    -Wall -Wshadow -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o CMakeFiles/gmock_main.dir/src/gmock-all.cc.o -c /usr/src/googletest/googlemock/src/gmock-all.cc",
+  "file": "/usr/src/googletest/googlemock/src/gmock-all.cc"
+},
+{
+  "directory": "/home/charles/devel/ros/scarab_ros/build/gtest/googlemock",
+  "command": "/usr/bin/c++  -DGTEST_CREATE_SHARED_LIBRARY=1 -Dgmock_main_EXPORTS -I/usr/src/googletest/googlemock/include -I/usr/src/googletest/googlemock -I/usr/src/googletest/googletest/include -I/usr/src/googletest/googletest  -fPIC    -Wall -Wshadow -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o CMakeFiles/gmock_main.dir/src/gmock_main.cc.o -c /usr/src/googletest/googlemock/src/gmock_main.cc",
+  "file": "/usr/src/googletest/googlemock/src/gmock_main.cc"
+},
+{
+  "directory": "/home/charles/devel/ros/scarab_ros/build/gtest/googlemock",
+  "command": "/usr/bin/c++  -DGTEST_CREATE_SHARED_LIBRARY=1 -Dgmock_EXPORTS -I/usr/src/googletest/googlemock/include -I/usr/src/googletest/googlemock -I/usr/src/googletest/googletest/include -I/usr/src/googletest/googletest  -fPIC    -Wall -Wshadow -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o CMakeFiles/gmock.dir/__/googletest/src/gtest-all.cc.o -c /usr/src/googletest/googletest/src/gtest-all.cc",
+  "file": "/usr/src/googletest/googletest/src/gtest-all.cc"
+},
+{
+  "directory": "/home/charles/devel/ros/scarab_ros/build/gtest/googlemock",
+  "command": "/usr/bin/c++  -DGTEST_CREATE_SHARED_LIBRARY=1 -Dgmock_EXPORTS -I/usr/src/googletest/googlemock/include -I/usr/src/googletest/googlemock -I/usr/src/googletest/googletest/include -I/usr/src/googletest/googletest  -fPIC    -Wall -Wshadow -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o CMakeFiles/gmock.dir/src/gmock-all.cc.o -c /usr/src/googletest/googlemock/src/gmock-all.cc",
+  "file": "/usr/src/googletest/googlemock/src/gmock-all.cc"
+},
+{
+  "directory": "/home/charles/devel/ros/scarab_ros/build/gtest/googlemock/gtest",
+  "command": "/usr/bin/c++  -DGTEST_CREATE_SHARED_LIBRARY=1 -Dgtest_main_EXPORTS -I/usr/src/googletest/googletest/include -I/usr/src/googletest/googletest  -fPIC    -Wall -Wshadow -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o CMakeFiles/gtest_main.dir/src/gtest_main.cc.o -c /usr/src/googletest/googletest/src/gtest_main.cc",
+  "file": "/usr/src/googletest/googletest/src/gtest_main.cc"
+},
+{
+  "directory": "/home/charles/devel/ros/scarab_ros/build/gtest/googlemock/gtest",
+  "command": "/usr/bin/c++  -DGTEST_CREATE_SHARED_LIBRARY=1 -Dgtest_EXPORTS -I/usr/src/googletest/googletest/include -I/usr/src/googletest/googletest  -fPIC    -Wall -Wshadow -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o CMakeFiles/gtest.dir/src/gtest-all.cc.o -c /usr/src/googletest/googletest/src/gtest-all.cc",
+  "file": "/usr/src/googletest/googletest/src/gtest-all.cc"
+},
+{
+  "directory": "/home/charles/devel/ros/scarab_ros/build/serial",
+  "command": "/usr/bin/c++  -DROS_BUILD_SHARED_LIBS=1 -Dserial_EXPORTS -I/home/charles/devel/ros/scarab_ros/src/serial/include  -fPIC   -o CMakeFiles/serial.dir/src/serial.cc.o -c /home/charles/devel/ros/scarab_ros/src/serial/src/serial.cc",
+  "file": "/home/charles/devel/ros/scarab_ros/src/serial/src/serial.cc"
+},
+{
+  "directory": "/home/charles/devel/ros/scarab_ros/build/serial",
+  "command": "/usr/bin/c++  -DROS_BUILD_SHARED_LIBS=1 -Dserial_EXPORTS -I/home/charles/devel/ros/scarab_ros/src/serial/include  -fPIC   -o CMakeFiles/serial.dir/src/impl/unix.cc.o -c /home/charles/devel/ros/scarab_ros/src/serial/src/impl/unix.cc",
+  "file": "/home/charles/devel/ros/scarab_ros/src/serial/src/impl/unix.cc"
+},
+{
+  "directory": "/home/charles/devel/ros/scarab_ros/build/serial",
+  "command": "/usr/bin/c++  -DROS_BUILD_SHARED_LIBS=1 -Dserial_EXPORTS -I/home/charles/devel/ros/scarab_ros/src/serial/include  -fPIC   -o CMakeFiles/serial.dir/src/impl/list_ports/list_ports_linux.cc.o -c /home/charles/devel/ros/scarab_ros/src/serial/src/impl/list_ports/list_ports_linux.cc",
+  "file": "/home/charles/devel/ros/scarab_ros/src/serial/src/impl/list_ports/list_ports_linux.cc"
+},
+{
+  "directory": "/home/charles/devel/ros/scarab_ros/build/serial",
+  "command": "/usr/bin/c++  -DROS_BUILD_SHARED_LIBS=1 -I/home/charles/devel/ros/scarab_ros/src/serial/include    -o CMakeFiles/serial_example.dir/examples/serial_example.cc.o -c /home/charles/devel/ros/scarab_ros/src/serial/examples/serial_example.cc",
+  "file": "/home/charles/devel/ros/scarab_ros/src/serial/examples/serial_example.cc"
+},
+{
+  "directory": "/home/charles/devel/ros/scarab_ros/build/serial/tests",
+  "command": "/usr/bin/c++  -DROS_BUILD_SHARED_LIBS=1 -I/home/charles/devel/ros/scarab_ros/src/serial/include -I/usr/src/googletest/googletest/include    -o CMakeFiles/serial-test.dir/unix_serial_tests.cc.o -c /home/charles/devel/ros/scarab_ros/src/serial/tests/unix_serial_tests.cc",
+  "file": "/home/charles/devel/ros/scarab_ros/src/serial/tests/unix_serial_tests.cc"
+},
+{
+  "directory": "/home/charles/devel/ros/scarab_ros/build/serial/tests",
+  "command": "/usr/bin/c++  -DROS_BUILD_SHARED_LIBS=1 -I/home/charles/devel/ros/scarab_ros/src/serial/include -I/usr/src/googletest/googletest/include    -o CMakeFiles/serial-test-timer.dir/unit/unix_timer_tests.cc.o -c /home/charles/devel/ros/scarab_ros/src/serial/tests/unit/unix_timer_tests.cc",
+  "file": "/home/charles/devel/ros/scarab_ros/src/serial/tests/unit/unix_timer_tests.cc"
+},
+{
+  "directory": "/home/charles/devel/ros/scarab_ros/build/motor_positions",
+  "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"motor_positions\\\" -I/home/charles/devel/ros/scarab_ros/devel/include -I/home/charles/devel/ros/scarab_ros/src/serial/include -I/home/charles/catkin_ws/install_isolated/include -I/home/charles/catkin_ws/install_isolated/share/xmlrpcpp/cmake/../../../include/xmlrpcpp    -o CMakeFiles/publish_positions.dir/src/publish_positions.cpp.o -c /home/charles/devel/ros/scarab_ros/src/motor_positions/src/publish_positions.cpp",
+  "file": "/home/charles/devel/ros/scarab_ros/src/motor_positions/src/publish_positions.cpp"
+},
+{
+  "directory": "/home/charles/devel/ros/scarab_ros/build/motor_positions",
+  "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"motor_positions\\\" -I/home/charles/devel/ros/scarab_ros/devel/include -I/home/charles/devel/ros/scarab_ros/src/serial/include -I/home/charles/catkin_ws/install_isolated/include -I/home/charles/catkin_ws/install_isolated/share/xmlrpcpp/cmake/../../../include/xmlrpcpp    -o CMakeFiles/send_control.dir/src/send_control.cpp.o -c /home/charles/devel/ros/scarab_ros/src/motor_positions/src/send_control.cpp",
+  "file": "/home/charles/devel/ros/scarab_ros/src/motor_positions/src/send_control.cpp"
+},
+{
+  "directory": "/home/charles/devel/ros/scarab_ros/build/motor_positions",
+  "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"motor_positions\\\" -I/home/charles/devel/ros/scarab_ros/devel/include -I/home/charles/devel/ros/scarab_ros/src/serial/include -I/home/charles/catkin_ws/install_isolated/include -I/home/charles/catkin_ws/install_isolated/share/xmlrpcpp/cmake/../../../include/xmlrpcpp    -o CMakeFiles/test_subscribe.dir/src/test_subscribe.cpp.o -c /home/charles/devel/ros/scarab_ros/src/motor_positions/src/test_subscribe.cpp",
+  "file": "/home/charles/devel/ros/scarab_ros/src/motor_positions/src/test_subscribe.cpp"
+}
+]
