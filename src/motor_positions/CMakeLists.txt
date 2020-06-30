@@ -161,10 +161,10 @@ include_directories(
 
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
-# install(PROGRAMS
-#   scripts/my_python_script
-#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+ #install(PROGRAMS
+   #scripts/TrajUpload/robotTraj.py
+   #DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+ #)
 
 ## Mark executables for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html
@@ -206,6 +206,9 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+#catkin_install_python(PROGRAMS scripts/TrajUpload/robotPyTraj.py 
+  #DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+#)
 
 add_executable(publish_positions src/publish_positions)
 target_link_libraries(publish_positions ${catkin_LIBRARIES})
@@ -218,3 +221,6 @@ add_dependencies(send_control roscpp serial ${catkin_EXPORTED_TARGETS})
 add_executable(test_subscribe src/test_subscribe)
 target_link_libraries(test_subscribe ${catkin_LIBRARIES})
 add_dependencies(test_subscribe roscpp serial ${catkin_EXPORTED_TARGETS})
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
