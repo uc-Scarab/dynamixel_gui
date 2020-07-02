@@ -20,20 +20,25 @@ int main(int argc, char**argv){
      
     motor_positions::controlTable msg;
 
-    //for(int i=5 ; i<6; i++ ){ 
-        msg.motor_id = 5;
+    usleep(2000000);
+
+    for(int i=1 ; i<5; i++ ){ 
+    //
+        //if(alt){
+        msg.motor_id = i;
         msg.command_id = 30;
         msg.value = 2048;
         publish.publish(msg);
         ROS_INFO_STREAM(msg);
 
-
-    //}
-
         usleep(2000000);
+
+    }
+
         //alt = !alt;
 
-        }
- 
+        //}
+    } 
     return 0;
+    
 }

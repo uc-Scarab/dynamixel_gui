@@ -37,7 +37,7 @@ class SerialComs {
         node = out_node;
     std::string vid_pid = "2341:0043"; // vid/pid for an Arduino Uno
     std::string teensy = "16c0:0483";
-    //std::string diff = "CP2102"; // if the description contains uart its what we want instead of the coms cable.
+    std::string diff = "CP2102"; // if the description contains uart its what we want instead of the coms cable.
     std::string port;
 
     std::vector<serial::PortInfo> devices_found = serial::list_ports();
@@ -49,7 +49,7 @@ class SerialComs {
 
         if (device.hardware_id != "n/a"){
         std::string ids = device.hardware_id.substr(12, 10);
-        if (ids.compare(vid_pid) or ids.compare(teensy)){
+        if (ids.compare(vid_pid) or ids.compare(teensy) or ids.compare(diff)){
             port = device.port;
             std::cout << "description:" << device.description << std::endl;
         }
@@ -183,8 +183,8 @@ int main(int argc, char**argv){
     SerialComs read_serial(node); 
     //SerialsComs write_serial(node);
     
-    std::string port = "/dev/ttyACM0";
-    //int baud = 115200;
+    std::string port = "/dev/ttyUSB0";
+    int baud = 115200;
   
 
     //boost::thread read(&SerialComs::run, &read_serial, baud, port);
