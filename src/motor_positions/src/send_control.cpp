@@ -2,7 +2,9 @@
 #include "ros/ros.h"
 #include <motor_positions/controlTable.h>
 #include <unistd.h>
+#include <motor_positions/controlTableItems.h>
 using std::cout;
+
 
 int main(int argc, char**argv){
 
@@ -12,7 +14,7 @@ int main(int argc, char**argv){
 
    ros::Publisher publish = node.advertise<motor_positions::controlTable>("dynamixel_control", 1);
 
-   //bool alt = true;
+   bool alt = true;
    //
     while(ros::ok()){
     
@@ -22,23 +24,27 @@ int main(int argc, char**argv){
 
     usleep(2000000);
 
-    for(int i=1 ; i<5; i++ ){ 
+    //for(int i=1 ; i<5; i++ ){ 
     //
-        //if(alt){
-        msg.motor_id = i;
-        msg.command_id = 30;
-        msg.value = 2048;
+        if(alt){
+            msg.value = 2048;
+        } else {
+            msg.value = 1900;
+        }
+        msg.motor_id = 4;
+        msg.command_id = GOAL_POSITION;
         publish.publish(msg);
         ROS_INFO_STREAM(msg);
 
         usleep(2000000);
 
+        alt = !alt;
     }
 
-        //alt = !alt;
 
         //}
+     return 0; 
     } 
-    return 0;
+
     
-}
+

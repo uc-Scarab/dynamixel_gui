@@ -91,7 +91,7 @@ class SerialComs {
     void controlCallback(motor_positions::controlTable msg){
         std::cout << "test" << std::endl;   
      ROS_INFO_STREAM(msg);
-        std::string port = "/dev/ttyACM0";
+        std::string port = "/dev/ttyUSB0";
         int baud = 115200;
      serial::Serial read_serial(port, baud, serial::Timeout::simpleTimeout(1000));
 
@@ -184,7 +184,7 @@ int main(int argc, char**argv){
     //SerialsComs write_serial(node);
     
     std::string port = "/dev/ttyUSB0";
-    int baud = 115200;
+    //int baud = 115200;
   
 
     //boost::thread read(&SerialComs::run, &read_serial, baud, port);
