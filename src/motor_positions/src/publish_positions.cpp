@@ -211,8 +211,8 @@ int main(int argc, char**argv){
   
 
     boost::thread read(&SerialComs::run, &read_serial, baud, port);
-    //boost::thread write(&SerialComs::subscribe, &read_serial);
-    read.join();
+    boost::thread write(&SerialComs::subscribe, &read_serial);
+    //read.join();
    //write.join();
     //} catch(const std::exception& ex){
         //std::cout << ex.what() << std::endl;

@@ -1,36 +1,96 @@
-#include "ros/ros.h"
-#include "std_msgs/String.h"
-#include <sstream>
-#include <motor_positions/controlTable.h>
-
-
-    void controlCallback(motor_positions::controlTable msg){
-     ROS_INFO("working");   
-    //uint8_t control_buffer[8];
-
-    //control_buffer[0] = LOWER_BYTE(60000); control_buffer[1] = UPPER_BYTE(60000);
-    //control_buffer[2] = 5;
-    //control_buffer[3] = msg.motor_id;
-    //control_buffer[4] = msg.command_id;
-    //control_buffer[5] = LOWER_BYTE(msg.value);
-    //control_buffer[6] = UPPER_BYTE(msg.value);
-    //control_buffer[7] = 244;
-
-    //this->arduino.write(control_buffer, 8);
-
-    
-}
-
+//#include <boost/thread/thread.hpp>
+//#include <thread>
+//#include <iostream>
      
 
+//void test(){
+    //while(1){
+    //std::cout << "test" << std::endl;
+    //}
+//}
 
+//int main(int argc, char**argv){
+    ////boost::thread t{test};
+    ////t.detach();
+    //std::thread test;
 
-int main(int argc, char**argv){
-    ros::init(argc, argv, "publish_positions");
-    ros::NodeHandle node;
-    ros::Subscriber sub = node.subscribe("dynamixel_control", 1000, controlCallback);
-     ros::spin();
-     return 0;
-}
+    //test.detach();
+    ////while(1){
+        ////std::cout << "main" << std::endl;
+    ////}
+    //return 0;
+//}
     
-    
+    // CPP program to demonstrate multithreading 
+// using three different callables. 
+#include <iostream> 
+#include <thread> 
+using namespace std; 
+
+// A dummy function 
+void foo(int Z) 
+{ 
+	//for (int i = 0; i < Z; i++) { 
+		//cout << "Thread using function"
+			//" pointer as callable\n"; 
+	//} 
+
+        while(1){
+        cout << "Thread using function"
+                        " pointer as callable\n"; 
+        }
+
+} 
+
+// A callable object 
+class thread_obj { 
+public: 
+	void operator()(int x) 
+	{ 
+		for (int i = 0; i < x; i++) 
+			cout << "Thread using function"
+				" object as callable\n"; 
+	} 
+}; 
+
+int main() 
+{ 
+	cout << "Threads 1 and 2 and 3 "
+		"operating independently" << endl; 
+
+	// This thread is launched by using 
+	// function pointer as callable 
+	thread th1(foo, 3); 
+
+	// This thread is launched by using 
+	// function object as callable 
+	thread th2(thread_obj(), 3); 
+
+	// Define a Lambda Expression 
+	auto f = [](int x) { 
+		for (int i = 0; i < x; i++) 
+			cout << "Thread using lambda"
+			" expression as callable\n"; 
+	}; 
+
+	// This thread is launched by using 
+	// lamda expression as callable 
+	thread th3(f, 3); 
+
+	// Wait for the threads to finish 
+	// Wait for thread t1 to finish 
+	th1.detach(); 
+
+	// Wait for thread t2 to finish 
+	//th2.join(); 
+
+	// Wait for thread t3 to finish 
+	//th3.join(); 
+        //
+        while(1){
+            std::cout << "main" << std::endl;
+        }
+
+	return 0; 
+} 
+
