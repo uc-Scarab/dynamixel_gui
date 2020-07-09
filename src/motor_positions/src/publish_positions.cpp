@@ -25,13 +25,20 @@
 
 using std::cout;
 
+void my_sleep(unsigned long milliseconds){
+        #ifdef _WIN32
+            Sleep(milliseconds);
+        #else
+            usleep(milliseconds*1000);
+        #endif
+    }
 class SerialComs {
     public:
         serial::Serial write_serial;
-        serial::Serial read_serial;
+        //serial::Serial read_serial;
         ros::NodeHandle node;
-        std::string port;
-        //int baud;
+        //std::string port;
+        int baud;
 
         SerialComs(ros::NodeHandle out_node) {
         node = out_node;
@@ -80,28 +87,22 @@ class SerialComs {
         }
             
 
-    void my_sleep(unsigned long milliseconds){
-        #ifdef _WIN32
-            Sleep(milliseconds);
-        #else
-            usleep(milliseconds*1000);
-        #endif
-    }
+    
 
     void controlCallback(motor_positions::controlTable msg){
-        std::cout << "test" << std::endl;   
+        //td::cout << "test" << std::endl;   
      ROS_INFO_STREAM(msg);
         std::string port = "/dev/ttyUSB0";
-        int baud = 115200;
+        int baud = 9600;
      serial::Serial read_serial(port, baud, serial::Timeout::simpleTimeout(1000));
 
     uint8_t control_buffer[8];
-
-    control_buffer[0] = LOWER_BYTE(60000); 
+    
+    control_buffer[0] = LOWER_BYTE(60000);
     control_buffer[1] = UPPER_BYTE(60000);
     control_buffer[2] = 5;
-    control_buffer[3] = msg.motor_id;
-    control_buffer[4] = msg.command_id;
+    control_buffer[3] = int(msg.motor_id);
+    control_buffer[4] = int(msg.command_id);
     control_buffer[5] = LOWER_BYTE(msg.value);
     control_buffer[6] = UPPER_BYTE(msg.value);
     control_buffer[7] = 244;
@@ -132,9 +133,10 @@ void run(int baud, std::string port){
             read_serial.read(check_buffer, 3);
             uint16_t check = INT_JOIN_BYTE(check_buffer[1], check_buffer[0]);
                 cout << "check:" << check << std::endl;
-                if(int(check) != 60000){
+                if(check != 60000){
                 read_serial.flushInput();
-                cout << "flushed" << std::endl;
+                ROS_ERROR_STREAM("check:" << check);
+                //cout << "flushed" << std::endl;
                 
                 } else {
                     motor_positions::motorPosition motor;
@@ -177,23 +179,44 @@ void run(int baud, std::string port){
 
 
 int main(int argc, char**argv){
-    try{
+     //int baud = 115200;
+        //serial::Serial read_serial(port, baud, serial::Timeout::simpleTimeout(1000));
+
+    //uint8_t control_buffer[3];
+
+    //while(1){
+
+    //control_buffer[0] = LOWER_BYTE(60000); 
+    //control_buffer[1] = UPPER_BYTE(60000);
+    //control_buffer[2] = 5;
+    //read_serial.write(control_buffer, 3);
+    //std::cout << "sending" << std::endl;
+    //my_sleep(2000);
+    //}
+    //return 0;
+    
+//}
+
+
+
     ros::init(argc, argv, "publish_positions");
     ros::NodeHandle node;
     SerialComs read_serial(node); 
-    //SerialsComs write_serial(node);
+    //SerialComs write_serial(node);
     
     std::string port = "/dev/ttyUSB0";
-    //int baud = 115200;
+   int baud = 9600;
+
+
   
 
-    //boost::thread read(&SerialComs::run, &read_serial, baud, port);
-    boost::thread write(&SerialComs::subscribe, &read_serial);
-    //read.join();
-    write.join();
-    } catch(const std::exception& ex){
-        std::cout << ex.what() << std::endl;
-    }
+    boost::thread read(&SerialComs::run, &read_serial, baud, port);
+    //boost::thread write(&SerialComs::subscribe, &read_serial);
+    read.join();
+   //write.join();
+    //} catch(const std::exception& ex){
+        //std::cout << ex.what() << std::endl;
+    //}
     return 0;
     
 }
