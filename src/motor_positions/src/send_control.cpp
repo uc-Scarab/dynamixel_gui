@@ -24,14 +24,14 @@ int main(int argc, char**argv){
 
     usleep(2000000);
 
-    //for(int i=1 ; i<5; i++ ){ 
-    //
+    for(int i=1 ; i<5; i++ ){ 
+    
         if(alt){
             msg.value = 2048;
         } else {
-            msg.value = 1900;
+            msg.value = 2048;
         }
-        msg.motor_id = 4;
+        msg.motor_id = i;
         msg.command_id = GOAL_POSITION;
         publish.publish(msg);
         ROS_INFO_STREAM(msg);
@@ -41,8 +41,7 @@ int main(int argc, char**argv){
         alt = !alt;
     }
 
-
-        //}
+    }
      return 0; 
     } 
 

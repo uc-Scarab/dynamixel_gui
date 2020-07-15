@@ -34,6 +34,7 @@ void my_sleep(unsigned long milliseconds){
     }
 class SerialComs {
     public:
+        boost::mutex mtx_;
         serial::Serial write_serial;
         //serial::Serial read_serial;
         ros::NodeHandle node;
@@ -92,7 +93,7 @@ class SerialComs {
     void controlCallback(motor_positions::controlTable msg){
         //td::cout << "test" << std::endl;   
      ROS_INFO_STREAM(msg);
-        std::string port = "/dev/ttyUSB0";
+        std::string port = "/dev/ttyACM0";
         int baud = 9600;
      serial::Serial read_serial(port, baud, serial::Timeout::simpleTimeout(1000));
 
@@ -113,6 +114,7 @@ class SerialComs {
 }
 
 void subscribe(){
+     boost::lock_guard<boost::mutex> guard(this->mtx_);
      ros::Subscriber sub = node.subscribe("dynamixel_control", 1000, &SerialComs::controlCallback, this);
      ros::spin();
 }
@@ -122,7 +124,7 @@ void run(int baud, std::string port){
        serial::Serial read_serial(port, baud, serial::Timeout::simpleTimeout(1000));
 
    while(1){
-
+        boost::lock_guard<boost::mutex> guard(mtx_);
        //std::cout << "open?:" << read_serial.isOpen() << std::endl;
         //uint8_t test_buffer[3];
         //read_serial.read(test_buffer, 3);
@@ -204,7 +206,7 @@ int main(int argc, char**argv){
     SerialComs read_serial(node); 
     //SerialComs write_serial(node);
     
-    std::string port = "/dev/ttyUSB0";
+    std::string port = "/dev/ttyACM0";
    int baud = 9600;
 
 
@@ -212,8 +214,8 @@ int main(int argc, char**argv){
 
     boost::thread read(&SerialComs::run, &read_serial, baud, port);
     boost::thread write(&SerialComs::subscribe, &read_serial);
-    //read.join();
-   //write.join();
+    read.join();
+   write.join();
     //} catch(const std::exception& ex){
         //std::cout << ex.what() << std::endl;
     //}
