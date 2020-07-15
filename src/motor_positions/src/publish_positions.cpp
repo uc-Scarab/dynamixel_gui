@@ -1,3 +1,4 @@
+#include <boost/thread/pthread/mutex.hpp>
 #include <ostream>
 #include <string>
 #include <iostream>
@@ -33,18 +34,18 @@ void my_sleep(unsigned long milliseconds){
         #endif
     }
 class SerialComs {
-    public:
-        serial::Serial write_serial;
-        //serial::Serial read_serial;
+        boost::mutex mtx_;
+        serial::Serial teensy_serial;
         ros::NodeHandle node;
-        //std::string port;
+        std::string port;
         int baud;
 
+    public:
         SerialComs(ros::NodeHandle out_node) {
         node = out_node;
     std::string vid_pid = "2341:0043"; // vid/pid for an Arduino Uno
-    std::string teensy = "16c0:0483";
-    std::string diff = "CP2102"; // if the description contains uart its what we want instead of the coms cable.
+    std::string teensy = "16c0:0483"; // vid/pid for the Teensy4.0
+    std::string diff = "CP2102"; // If the description of the device contains this then it isn't the coms cable.
     std::string port;
 
     std::vector<serial::PortInfo> devices_found = serial::list_ports();
@@ -66,76 +67,63 @@ class SerialComs {
 
 
     std::cout << "Port:" << port << std::endl;
-    //unsigned long baud = 115200;
 
-    //serial::Serial read_serial(port, baud, serial::Timeout::simpleTimeout(1000));
-    //serial::Serial write_serial(port, baud, serial::Timeout::simpleTimeout(1000));
-    //arduino = arduino;
-
-    //if(read_serial.isOpen())
-        //std::cout << "read open." << std::endl;
-    //else
-        //std::cout << "read not open." << std::endl;
-
-    //if(write_serial.isOpen())
-        //std::cout << "write open." << std::endl;
-    //else
-        //std::cout << "write not open." << std::endl;
-
-
-
+    if(teensy_serial.isOpen())
+        ROS_INFO("serial open");
+    else
+        ROS_INFO("serial not open");
         }
             
 
     
 
     void controlCallback(motor_positions::controlTable msg){
-        //td::cout << "test" << std::endl;   
+        boost::lock_guard<boost::mutex> guard(this->mtx_);
      ROS_INFO_STREAM(msg);
-        std::string port = "/dev/ttyUSB0";
-        int baud = 9600;
-     serial::Serial read_serial(port, baud, serial::Timeout::simpleTimeout(1000));
+     serial::Serial teensy_serial(this->port, this->baud, serial::Timeout::simpleTimeout(1000));
 
     uint8_t control_buffer[8];
     
     control_buffer[0] = LOWER_BYTE(60000);
     control_buffer[1] = UPPER_BYTE(60000);
     control_buffer[2] = 5;
-    control_buffer[3] = int(msg.motor_id);
-    control_buffer[4] = int(msg.command_id);
+    control_buffer[3] = msg.motor_id;
+    control_buffer[4] = msg.command_id;
     control_buffer[5] = LOWER_BYTE(msg.value);
     control_buffer[6] = UPPER_BYTE(msg.value);
     control_buffer[7] = 244;
 
-    read_serial.write(control_buffer, 8);
+    teensy_serial.write(control_buffer, 8);
+    my_sleep(100);
 
     
 }
 
-void subscribe(){
+void writeControl(){
      ros::Subscriber sub = node.subscribe("dynamixel_control", 1000, &SerialComs::controlCallback, this);
      ros::spin();
 }
 
-void run(int baud, std::string port){
+void receivePositions(int baud, std::string port){
    ros::Publisher publisher = node.advertise<motor_positions::positionArray>("publisher_positions", 1);
-       serial::Serial read_serial(port, baud, serial::Timeout::simpleTimeout(1000));
+       serial::Serial teensy_serial(port, baud, serial::Timeout::simpleTimeout(1000));
 
    while(1){
-
-       //std::cout << "open?:" << read_serial.isOpen() << std::endl;
+    boost::lock_guard<boost::mutex> guard(mtx_);
+       //std::cout << "open?:" << teensy_serial.isOpen() << std::endl;
         //uint8_t test_buffer[3];
-        //read_serial.read(test_buffer, 3);
-        //std::cout << "available:" << read_serial.available() << std::endl;
+        //teensy_serial.read(test_buffer, 3);
+        //std::cout << "available:" << teensy_serial.available() << std::endl;
 
-        if(read_serial.available() >= 3){
+        if(teensy_serial.available() >= 3){
             uint8_t check_buffer[3];
-            read_serial.read(check_buffer, 3);
+            teensy_serial.read(check_buffer, 3);
             uint16_t check = INT_JOIN_BYTE(check_buffer[1], check_buffer[0]);
-                cout << "check:" << check << std::endl;
+            //uint16_t check = 60000;
+                //cout << "check:" << check << std::endl;
                 if(check != 60000){
-                read_serial.flushInput();
-                ROS_ERROR_STREAM("check:" << check);
+                teensy_serial.flushInput();
+                ROS_ERROR_STREAM("front: check:" << check);
                 //cout << "flushed" << std::endl;
                 
                 } else {
@@ -143,7 +131,7 @@ void run(int baud, std::string port){
                     motor_positions::positionArray msg; 
                     int payload = int(check_buffer[2]);
                     uint8_t message_buffer[payload];
-                    read_serial.read(message_buffer, payload);
+                    teensy_serial.read(message_buffer, payload);
 
                     for(int i=0;i<payload -3;i+=3){
                         //cout << "id:" << int(message_buffer[i]) << std::endl;
@@ -162,9 +150,10 @@ void run(int baud, std::string port){
 
                     }
 
-                    if (message_buffer[payload - 1] != 244){
-                    read_serial.flushInput();
-                    }
+                    //if (message_buffer[payload - 1] != 244){
+                        //ROS_ERROR_STREAM("back check" << message_buffer[payload - 1]);
+                    //teensy_serial.flushInput();
+                    //}
         }
                     
                 }
@@ -180,7 +169,7 @@ void run(int baud, std::string port){
 
 int main(int argc, char**argv){
      //int baud = 115200;
-        //serial::Serial read_serial(port, baud, serial::Timeout::simpleTimeout(1000));
+        //serial::Serial teensy_serial(port, baud, serial::Timeout::simpleTimeout(1000));
 
     //uint8_t control_buffer[3];
 
@@ -189,7 +178,7 @@ int main(int argc, char**argv){
     //control_buffer[0] = LOWER_BYTE(60000); 
     //control_buffer[1] = UPPER_BYTE(60000);
     //control_buffer[2] = 5;
-    //read_serial.write(control_buffer, 3);
+    //teensy_serial.write(control_buffer, 3);
     //std::cout << "sending" << std::endl;
     //my_sleep(2000);
     //}
@@ -201,22 +190,18 @@ int main(int argc, char**argv){
 
     ros::init(argc, argv, "publish_positions");
     ros::NodeHandle node;
-    SerialComs read_serial(node); 
-    //SerialComs write_serial(node);
+    SerialComs teensy_serial(node); 
     
-    std::string port = "/dev/ttyUSB0";
-   int baud = 9600;
+    std::string port = "/dev/ttyACM0";
+   int baud = 115200;
 
 
   
 
-    boost::thread read(&SerialComs::run, &read_serial, baud, port);
-    boost::thread write(&SerialComs::subscribe, &read_serial);
-    //read.join();
-   //write.join();
-    //} catch(const std::exception& ex){
-        //std::cout << ex.what() << std::endl;
-    //}
+    boost::thread read(&SerialComs::receivePositions, &teensy_serial, baud, port);
+    boost::thread write(&SerialComs::writeControl, &teensy_serial);
+    read.join();
+   write.join();
     return 0;
     
 }
