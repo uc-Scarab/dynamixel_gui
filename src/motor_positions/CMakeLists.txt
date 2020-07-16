@@ -53,6 +53,8 @@ find_package(catkin REQUIRED COMPONENTS
    motorPosition.msg
    positionArray.msg
    controlTable.msg 
+   viaPoints.msg
+   trajectory.msg
  )
 
 ## Generate services in the 'srv' folder

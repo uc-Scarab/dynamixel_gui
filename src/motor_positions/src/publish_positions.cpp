@@ -207,15 +207,15 @@ int main(int argc, char**argv){
     //SerialComs write_serial(node);
     
     std::string port = "/dev/ttyACM0";
-   int baud = 9600;
+   int baud = 115200;
 
 
   
 
     boost::thread read(&SerialComs::run, &read_serial, baud, port);
-    boost::thread write(&SerialComs::subscribe, &read_serial);
+    //boost::thread write(&SerialComs::subscribe, &read_serial);
     read.join();
-   write.join();
+   //write.join();
     //} catch(const std::exception& ex){
         //std::cout << ex.what() << std::endl;
     //}
