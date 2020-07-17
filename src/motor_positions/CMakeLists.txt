@@ -8,6 +8,7 @@ project(motor_positions)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  rospy
   roscpp
   serial
   std_msgs
@@ -47,7 +48,8 @@ find_package(catkin REQUIRED COMPONENTS
    #* uncomment the generate_messages entry below
    #* add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
-## Generate messages in the 'msg' folder
+
+# Generate messages in the 'msg' folder
  add_message_files(
    FILES
    motorPosition.msg
@@ -109,7 +111,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
     INCLUDE_DIRS ${motor_positions_INCLUDE_DIRECTORIES}
 #  LIBRARIES motor_positions
-  CATKIN_DEPENDS roscpp serial message_generation message_runtime
+  CATKIN_DEPENDS roscpp rospy serial message_generation message_runtime
 #  DEPENDS system_lib
 )
 
@@ -162,10 +164,10 @@ include_directories(
 
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
- #install(PROGRAMS
-   #scripts/TrajUpload/robotTraj.py
-   #DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
- #)
+catkin_install_python(PROGRAMS
+   scripts/gen_traj.py
+   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+ )
 
 ## Mark executables for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html
@@ -210,7 +212,9 @@ include_directories(
 #catkin_install_python(PROGRAMS scripts/TrajUpload/robotPyTraj.py 
   #DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 #)
-
+#catkin_install_python(PROGRAMS nodes/gen_traj.py 
+  #DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+#)
 add_executable(publish_positions src/publish_positions)
 target_link_libraries(publish_positions ${catkin_LIBRARIES})
 add_dependencies(publish_positions roscpp serial std_msgs, message_generation ${catkin_EXPORTED_TARGETS})
