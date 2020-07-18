@@ -39,7 +39,7 @@ class SerialComs {
        //serial::Serial read_serial;
         ros::NodeHandle node;
         std::string port;
-        int baud;
+        int baud = 115200;
 
     public:
         SerialComs(ros::NodeHandle out_node) {
@@ -65,7 +65,8 @@ class SerialComs {
         }
 
     }
-
+     serial::Serial teensy_serial(this->port, this->baud, serial::Timeout::simpleTimeout(1000));
+ 
 
     std::cout << "Port:" << port << std::endl;
 
@@ -81,10 +82,8 @@ class SerialComs {
     void controlCallback(motor_positions::controlTable msg){
         boost::lock_guard<boost::mutex> guard(this->mtx_);
      ROS_INFO_STREAM(msg);
-     serial::Serial teensy_serial(this->port, this->baud, serial::Timeout::simpleTimeout(1000));
+     //serial::Serial teensy_serial(this->port, this->baud, serial::Timeout::simpleTimeout(1000));
         std::string port = "/dev/ttyACM0";
-        int baud = 9600;
-     serial::Serial read_serial(port, baud, serial::Timeout::simpleTimeout(1000));
 
     uint8_t control_buffer[8];
     
