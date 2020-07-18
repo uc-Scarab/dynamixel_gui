@@ -36,6 +36,7 @@ void my_sleep(unsigned long milliseconds){
 class SerialComs {
         boost::mutex mtx_;
         serial::Serial teensy_serial;
+       //serial::Serial read_serial;
         ros::NodeHandle node;
         std::string port;
         int baud;
@@ -81,6 +82,9 @@ class SerialComs {
         boost::lock_guard<boost::mutex> guard(this->mtx_);
      ROS_INFO_STREAM(msg);
      serial::Serial teensy_serial(this->port, this->baud, serial::Timeout::simpleTimeout(1000));
+        std::string port = "/dev/ttyACM0";
+        int baud = 9600;
+     serial::Serial read_serial(port, baud, serial::Timeout::simpleTimeout(1000));
 
     uint8_t control_buffer[8];
     
@@ -100,6 +104,7 @@ class SerialComs {
 }
 
 void writeControl(){
+     boost::lock_guard<boost::mutex> guard(this->mtx_);
      ros::Subscriber sub = node.subscribe("dynamixel_control", 1000, &SerialComs::controlCallback, this);
      ros::spin();
 }
@@ -110,17 +115,11 @@ void receivePositions(int baud, std::string port){
 
    while(1){
     boost::lock_guard<boost::mutex> guard(mtx_);
-       //std::cout << "open?:" << teensy_serial.isOpen() << std::endl;
-        //uint8_t test_buffer[3];
-        //teensy_serial.read(test_buffer, 3);
-        //std::cout << "available:" << teensy_serial.available() << std::endl;
 
         if(teensy_serial.available() >= 3){
             uint8_t check_buffer[3];
             teensy_serial.read(check_buffer, 3);
             uint16_t check = INT_JOIN_BYTE(check_buffer[1], check_buffer[0]);
-            //uint16_t check = 60000;
-                //cout << "check:" << check << std::endl;
                 if(check != 60000){
                 teensy_serial.flushInput();
                 ROS_ERROR_STREAM("front: check:" << check);
@@ -168,25 +167,6 @@ void receivePositions(int baud, std::string port){
 
 
 int main(int argc, char**argv){
-     //int baud = 115200;
-        //serial::Serial teensy_serial(port, baud, serial::Timeout::simpleTimeout(1000));
-
-    //uint8_t control_buffer[3];
-
-    //while(1){
-
-    //control_buffer[0] = LOWER_BYTE(60000); 
-    //control_buffer[1] = UPPER_BYTE(60000);
-    //control_buffer[2] = 5;
-    //teensy_serial.write(control_buffer, 3);
-    //std::cout << "sending" << std::endl;
-    //my_sleep(2000);
-    //}
-    //return 0;
-    
-//}
-
-
 
     ros::init(argc, argv, "publish_positions");
     ros::NodeHandle node;
