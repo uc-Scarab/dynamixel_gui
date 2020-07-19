@@ -21,17 +21,18 @@ out = mstraj(path, dt=0.1, tacc=5, tsegment=[2, 2, 2])
 # pdb.set_trace()
 
 move_msg = controlTable()
-while not rospy.is_shutdown():
+while True:
     for move in out.q:
-        print("test")
         # pdb.set_trace()
         for count, via in enumerate(move):
             move_msg.motor_id = count + 1
             move_msg.command_id = 58
             move_msg.value = via
 
+            rospy.loginfo("test")
+
             pub.publish(move_msg)
-            rate.sleep()
+        rate.sleep()
 
 
 

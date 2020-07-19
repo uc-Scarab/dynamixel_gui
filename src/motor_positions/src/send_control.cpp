@@ -25,8 +25,7 @@ int main(int argc, char**argv){
     usleep(2000000);
 
     for(int i=1 ; i<5; i++ ){ 
-    
-        if(alt){
+       if(alt){
             msg.value = 2048;
         } else {
             msg.value = 2048;
@@ -41,7 +40,9 @@ int main(int argc, char**argv){
         alt = !alt;
     }
 
-    }
+
+        }
+    
      return 0; 
     } 
 
