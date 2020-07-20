@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 import rospy
 from motor_positions.msg import controlTable
 # from roboticstoolbox import mstraj
@@ -9,12 +9,14 @@ import pdb
 rospy.init_node('trajectories', anonymous=True)
 pub = rospy.Publisher("dynamixel_control", controlTable, queue_size=10)
 rate = rospy.Rate(10) # 10hz
-test = controlTable
+test = controlTable()
 while not rospy.is_shutdown():
     # rospy.loginfo("test")
     test.motor_id = 1
     test.command_id = 58
     test.value = 500
+    pub.publish(test)
+    # rate.sleep()
 
     # pub.publish("test")
 
