@@ -1,6 +1,8 @@
 <launch>
 
     <node pkg="motor_positions" name="trajectories" type="gen_traj.py"/>
+    <node pkg="motor_positions" name="serial_coms" type="publish_positions"/>
+
 
   </launch>
 

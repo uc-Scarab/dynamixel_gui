@@ -5,6 +5,7 @@
 #include <cstdio>
 #include "serial/serial.h"
 #include <math.h>
+#include <std_msgs/String.h>
 
 // OS Specific sleep
 #ifdef _WIN32
@@ -35,196 +36,6 @@ void my_sleep(unsigned long milliseconds){
         #endif
     }
 
-
-enum ControlTableItem{
-
-  MODEL_NUMBER = 0,
-
-  MODEL_INFORMATION,
-
-  FIRMWARE_VERSION,
-
-  PROTOCOL_VERSION,
-
-  ID,
-
-  SECONDARY_ID,
-
-  BAUD_RATE,
-
-  DRIVE_MODE,
-
-  CONTROL_MODE,
-
-  OPERATING_MODE,
-
-  CW_ANGLE_LIMIT,
-
-  CCW_ANGLE_LIMIT,
-
-  TEMPERATURE_LIMIT,
-
-  MIN_VOLTAGE_LIMIT,
-
-  MAX_VOLTAGE_LIMIT,
-
-  PWM_LIMIT,
-
-  CURRENT_LIMIT,
-
-  VELOCITY_LIMIT,
-
-  MAX_POSITION_LIMIT,
-
-  MIN_POSITION_LIMIT,
-
-  ACCELERATION_LIMIT,
-
-  MAX_TORQUE,
-
-  HOMING_OFFSET,
-
-  MOVING_THRESHOLD,
-
-  MULTI_TURN_OFFSET,
-
-  RESOLUTION_DIVIDER,
-
-  EXTERNAL_PORT_MODE_1,
-
-  EXTERNAL_PORT_MODE_2,
-
-  EXTERNAL_PORT_MODE_3,
-
-  EXTERNAL_PORT_MODE_4,
-
-  STATUS_RETURN_LEVEL,
-
-  RETURN_DELAY_TIME,
-
-  ALARM_LED,
-
-  SHUTDOWN,
-
-
-
-  TORQUE_ENABLE,
-
-  LED,
-
-  LED_RED,
-
-  LED_GREEN,
-
-  LED_BLUE,
-
-  REGISTERED_INSTRUCTION,
-
-  HARDWARE_ERROR_STATUS,
-
-  VELOCITY_P_GAIN,
-
-  VELOCITY_I_GAIN,
-
-  POSITION_P_GAIN,
-
-  POSITION_I_GAIN,
-
-  POSITION_D_GAIN,
-
-  FEEDFORWARD_1ST_GAIN,
-
-  FEEDFORWARD_2ND_GAIN,
-
-  P_GAIN,
-
-  I_GAIN,
-
-  D_GAIN,
-
-  CW_COMPLIANCE_MARGIN,
-
-  CCW_COMPLIANCE_MARGIN,
-
-  CW_COMPLIANCE_SLOPE,
-
-  CCW_COMPLIANCE_SLOPE,
-
-  GOAL_PWM,
-
-  GOAL_TORQUE,
-
-  GOAL_CURRENT,
-
-  GOAL_POSITION,
-
-  GOAL_VELOCITY,
-
-  GOAL_ACCELERATION,
-
-  MOVING_SPEED,
-
-  PRESENT_PWM,
-
-  PRESENT_LOAD,
-
-  PRESENT_SPEED,
-
-  PRESENT_CURRENT,
-
-  PRESENT_POSITION,
-
-  PRESENT_VELOCITY,
-
-  PRESENT_VOLTAGE,
-
-  PRESENT_TEMPERATURE,
-
-  TORQUE_LIMIT,
-
-  REGISTERED,
-
-  MOVING,
-
-  LOCK,
-
-  PUNCH,
-
-  CURRENT,
-
-  SENSED_CURRENT,
-
-  REALTIME_TICK,
-
-  TORQUE_CTRL_MODE_ENABLE,
-
-  BUS_WATCHDOG,
-
-  PROFILE_ACCELERATION,
-
-  PROFILE_VELOCITY,
-
-  MOVING_STATUS,
-
-  VELOCITY_TRAJECTORY,
-
-  POSITION_TRAJECTORY,
-
-  PRESENT_INPUT_VOLTAGE,
-
-  EXTERNAL_PORT_DATA_1,
-
-  EXTERNAL_PORT_DATA_2,
-
-  EXTERNAL_PORT_DATA_3,
-
-  EXTERNAL_PORT_DATA_4,
-
-
-
-  LAST_DUMMY_ITEM = 0xFF
-
-};
 
 class SerialComs {
         boost::mutex mtx_;
@@ -277,35 +88,34 @@ class SerialComs {
     
 
     void controlCallback(motor_positions::controlTable msg){
-        boost::lock_guard<boost::mutex> guard(this->mtx_);
-     ROS_INFO_STREAM(msg);
+        //boost::lock_guard<boost::mutex> guard(this->mtx_);
+        ROS_INFO_STREAM(msg);
      //serial::Serial teensy_serial(this->port, this->baud, serial::Timeout::simpleTimeout(1000));
-        std::string port = "/dev/ttyACM0";
+        //std::string port = "/dev/ttyACM0";
 
-    uint8_t control_buffer[8];
+    //uint8_t control_buffer[8];
 
-    int value;
+    //int value;
 
-    value = position_rpm_to_raw(msg.value);
+    //value = position_rpm_to_raw(msg.value);
     
-    control_buffer[0] = LOWER_BYTE(60000);
-    control_buffer[1] = UPPER_BYTE(60000);
-    control_buffer[2] = 5;
-    control_buffer[3] = msg.motor_id;
-    control_buffer[4] = msg.command_id;
-    control_buffer[5] = LOWER_BYTE(value);
-    control_buffer[6] = UPPER_BYTE(value);
-    control_buffer[7] = 244;
+    //control_buffer[0] = LOWER_BYTE(60000);
+    //control_buffer[1] = UPPER_BYTE(60000);
+    //control_buffer[2] = 5;
+    //control_buffer[3] = msg.motor_id;
+    //control_buffer[4] = msg.command_id;
+    //control_buffer[5] = LOWER_BYTE(value);
+    //control_buffer[6] = UPPER_BYTE(value);
+    //control_buffer[7] = 244;
 
     //teensy_serial.write(control_buffer, 8);
-    ROS_INFO_STREAM(value);
-    my_sleep(100);
+    //ROS_INFO_STREAM(value);
+    //my_sleep(100);
 
     
 }
 
 void writeControl(){
-     boost::lock_guard<boost::mutex> guard(this->mtx_);
      ros::Subscriber sub = node.subscribe("dynamixel_control", 1000, &SerialComs::controlCallback, this);
      ros::spin();
 }

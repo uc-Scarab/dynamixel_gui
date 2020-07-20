@@ -62,7 +62,6 @@
   <exec_depend>roscpp</exec_depend>
   <exec_depend>serial</exec_depend>
   <exec_depend>rospy</exec_depend>
-  <exec_depend>roboticstoolbox</exec_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
