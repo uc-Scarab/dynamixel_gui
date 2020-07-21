@@ -10,7 +10,7 @@ path = np.array([
         [2578, 2394, 2368, 2194]
         ])
 
-out = mstraj(path, dt=0.1, tacc=5, tsegment=[2, 2, 2])
+out = mstraj(path, dt=0.1, tacc=1, tsegment=[2, 2, 2])
 print(out.q)
 import matplotlib.pyplot as plt
 plt.figure()
