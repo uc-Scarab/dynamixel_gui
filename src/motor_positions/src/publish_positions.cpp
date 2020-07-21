@@ -69,13 +69,13 @@ class SerialComs {
         }
 
     }
-     //serial::Serial teensy_serial(port, baud, serial::Timeout::simpleTimeout(1000));
+     serial::Serial teensy_serial(port, baud, serial::Timeout::simpleTimeout(1000));
  
 
     std::cout << "Port:" << port << std::endl;
 
     if(teensy_serial.isOpen())
-        ROS_INFO("serial open");
+        ROS_INFO_STREAM("serial open port:" << port);
     else
         ROS_INFO("serial not open");
         }
@@ -85,7 +85,7 @@ class SerialComs {
     void controlCallback(motor_positions::controlTable msg){
         //boost::lock_guard<boost::mutex> guard(this->mtx_);
         ROS_INFO_STREAM(msg);
-     serial::Serial teensy_serial(this->port, this->baud, serial::Timeout::simpleTimeout(1000));
+     serial::Serial teensy_serial(port, baud, serial::Timeout::simpleTimeout(1000));
         //std::string port = "/dev/ttyACM0";
 
     uint8_t control_buffer[8];
@@ -98,8 +98,11 @@ class SerialComs {
     control_buffer[5] = LOWER_BYTE(msg.value);
     control_buffer[6] = UPPER_BYTE(msg.value);
     control_buffer[7] = 244;
-
+    try {
     teensy_serial.write(control_buffer, 8);
+    } catch(serial::PortNotOpenedException& e){
+        ROS_INFO("Port not opened while writing error");
+    }
     my_sleep(100);
 
     

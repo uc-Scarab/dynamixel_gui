@@ -3,7 +3,9 @@ import rospy
 from motor_positions.msg import controlTable
 from roboticstoolbox import mstraj
 import numpy as np
+import math
 import pdb
+
 # from std_msgs.msg import String
 
 rospy.init_node('trajectories', anonymous=True)
@@ -19,16 +21,17 @@ path = np.array([
         ])
 
 
-out = mstraj(path, dt=0.1, tacc=1, tsegment=[2])
+out = mstraj(path, dt=0.1, tacc=1, tsegment=[2, 2, 2])
 
 move_msg = controlTable()
 while True:
     for move in out.q:
         # pdb.set_trace()
         for count, via in enumerate(move):
-            move_msg.motor_id = count + 1
+            move_msg.motor_id = count + 4
             move_msg.command_id = 58
-            move_msg.value = via
+            move_msg.value = math.ceil(via)
+            # print(move_msg.value)
 
             rospy.loginfo(move_msg)
             pub.publish(move_msg)
