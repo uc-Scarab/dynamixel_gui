@@ -69,7 +69,7 @@ class SerialComs {
         }
 
     }
-     serial::Serial teensy_serial(this->port, this->baud, serial::Timeout::simpleTimeout(1000));
+     //serial::Serial teensy_serial(port, baud, serial::Timeout::simpleTimeout(1000));
  
 
     std::cout << "Port:" << port << std::endl;
@@ -80,47 +80,39 @@ class SerialComs {
         ROS_INFO("serial not open");
         }
            
-    int position_rpm_to_raw(float theoretical){
-        int float_raw = theoretical * (4095 / 6.283);
-        int rounded_raw = round(float_raw);
-        return rounded_raw;
-    }
-    
+   
 
     void controlCallback(motor_positions::controlTable msg){
         //boost::lock_guard<boost::mutex> guard(this->mtx_);
         ROS_INFO_STREAM(msg);
-     //serial::Serial teensy_serial(this->port, this->baud, serial::Timeout::simpleTimeout(1000));
+     serial::Serial teensy_serial(this->port, this->baud, serial::Timeout::simpleTimeout(1000));
         //std::string port = "/dev/ttyACM0";
 
-    //uint8_t control_buffer[8];
+    uint8_t control_buffer[8];
 
-    //int value;
+    control_buffer[0] = LOWER_BYTE(60000);
+    control_buffer[1] = UPPER_BYTE(60000);
+    control_buffer[2] = 5;
+    control_buffer[3] = msg.motor_id;
+    control_buffer[4] = msg.command_id;
+    control_buffer[5] = LOWER_BYTE(msg.value);
+    control_buffer[6] = UPPER_BYTE(msg.value);
+    control_buffer[7] = 244;
 
-    //value = position_rpm_to_raw(msg.value);
-    
-    //control_buffer[0] = LOWER_BYTE(60000);
-    //control_buffer[1] = UPPER_BYTE(60000);
-    //control_buffer[2] = 5;
-    //control_buffer[3] = msg.motor_id;
-    //control_buffer[4] = msg.command_id;
-    //control_buffer[5] = LOWER_BYTE(value);
-    //control_buffer[6] = UPPER_BYTE(value);
-    //control_buffer[7] = 244;
-
-    //teensy_serial.write(control_buffer, 8);
-    //ROS_INFO_STREAM(value);
-    //my_sleep(100);
+    teensy_serial.write(control_buffer, 8);
+    my_sleep(100);
 
     
 }
 
 void writeControl(){
+    // provides a function for the write thread can point to since 
      ros::Subscriber sub = node.subscribe("dynamixel_control", 1000, &SerialComs::controlCallback, this);
      ros::spin();
 }
 
 void receivePositions(int baud, std::string port){
+    // recieves position updates from the teensy
    ros::Publisher publisher = node.advertise<motor_positions::positionArray>("publisher_positions", 1);
        serial::Serial teensy_serial(port, baud, serial::Timeout::simpleTimeout(1000));
 
@@ -185,9 +177,6 @@ int main(int argc, char**argv){
     
     std::string port = "/dev/ttyACM0";
    int baud = 115200;
-
-
-  
 
     //boost::thread read(&SerialComs::receivePositions, &teensy_serial, baud, port);
     boost::thread write(&SerialComs::writeControl, &teensy_serial);
