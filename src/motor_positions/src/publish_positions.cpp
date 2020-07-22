@@ -25,9 +25,8 @@ using std::vector;
 using std::chrono::system_clock;
 using std::chrono::milliseconds;
 
-const std::string port = "/dev/ttyACM0";
-const int baud = 115200;
-ros::Rate rate(10);
+std::string port = "/dev/ttyACM0";
+int baud = 115200;
 serial::Serial teensy_serial(port, baud, serial::Timeout::simpleTimeout(1000));
 
 vector<motor_positions::controlTable> controlMessages{};
@@ -53,6 +52,7 @@ void writeSerial(){
         
         int msg_count = 3;
         for(motor_positions::controlTable msg: controlMessages){
+            ROS_INFO_STREAM(msg);
             control_buffer[msg_count] = msg.motor_id;
             control_buffer[msg_count + 1] = msg.command_id;
                
@@ -120,7 +120,6 @@ void readSerial(){
 
 
 void controlCallback(motor_positions::controlTable msg) {
-        ROS_INFO_STREAM(msg);
         controlMessages.push_back(msg);
 }
 
@@ -142,31 +141,44 @@ int main(int argc, char**argv){
 
    ros::Publisher publisher = node.advertise<motor_positions::positionArray>("publisher_positions", 1);
 
-    auto last_activation = std::chrono::high_resolution_clock::now();
+    auto last_activation_write = std::chrono::high_resolution_clock::now();
 ;
+auto last_activation_read = std::chrono::high_resolution_clock::now();
+;
+
     auto time_now = std::chrono::high_resolution_clock::now();
 ;
-        while(ros::ok()){
+    auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(time_now - last_activation_read).count(); 
+
+    ros::Rate rate(10);
+
+        while(1){
 
     time_now = std::chrono::high_resolution_clock::now();
-    auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(time_now - last_activation).count(); 
+    diff = std::chrono::duration_cast<std::chrono::milliseconds>(time_now - last_activation_write).count(); 
 
     if(diff >= 100){
         writeSerial();
-        last_activation = time_now;
+        last_activation_write  = time_now;
     }
-
-    if(diff >= 100){
-        readSerial();
-        last_activation = time_now;
-    }
+    //time_now = std::chrono::high_resolution_clock::now();
+    //diff = std::chrono::duration_cast<std::chrono::milliseconds>(time_now - last_activation_read).count(); 
 
 
+    //if(diff >= 100){
+        //readSerial();
+        //last_activation_read = time_now;
+    //}
 
-    if(diff >= 100){
-        publishPositions(publisher);
-        last_activation = time_now;
-    }
+    //time_now = std::chrono::high_resolution_clock::now();
+    //diff = std::chrono::duration_cast<std::chrono::milliseconds>(time_now - last_activation_read).count(); 
+
+
+
+    //if(diff >= 100){
+        //publishPositions(publisher);
+        //last_activation_read = time_now;
+    //}
 
 
     ros::spinOnce();

@@ -24,7 +24,7 @@ int main(int argc, char**argv){
 
     usleep(2000000);
 
-    for(int i=1 ; i<5; i++ ){ 
+    for(int i=13 ; i<17; i++ ){ 
        if(alt){
             msg.value = 2048;
         } else {
