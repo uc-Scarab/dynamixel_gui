@@ -166,6 +166,7 @@ include_directories(
 ## in contrast to setup.py, you can choose the destination
 catkin_install_python(PROGRAMS
    src/gen_traj.py
+   src/matlab_conversion.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )
 
@@ -212,12 +213,9 @@ catkin_install_python(PROGRAMS
 #catkin_install_python(PROGRAMS scripts/TrajUpload/robotPyTraj.py 
   #DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 #)
-#catkin_install_python(PROGRAMS nodes/gen_traj.py 
-  #DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-#)
-add_executable(publish_positions src/publish_positions)
-target_link_libraries(publish_positions ${catkin_LIBRARIES})
-add_dependencies(publish_positions roscpp serial std_msgs, message_generation ${catkin_EXPORTED_TARGETS})
+add_executable(serial_coms src/serial_coms.cpp)
+target_link_libraries(serial_coms ${catkin_LIBRARIES})
+add_dependencies(serial_coms roscpp serial std_msgs, message_generation ${catkin_EXPORTED_TARGETS})
 
 add_executable(send_control src/send_control)
 target_link_libraries(send_control ${catkin_LIBRARIES})

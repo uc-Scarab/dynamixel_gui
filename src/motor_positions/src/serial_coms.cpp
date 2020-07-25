@@ -153,28 +153,28 @@ auto last_activation_read = std::chrono::high_resolution_clock::now();
     time_now = std::chrono::high_resolution_clock::now();
     diff = std::chrono::duration_cast<std::chrono::milliseconds>(time_now - last_activation_write).count(); 
 
+    //if(diff >= 100){
+        //writeSerial();
+        //last_activation_write  = time_now;
+    //}
+    //time_now = std::chrono::high_resolution_clock::now();
+    //diff = std::chrono::duration_cast<std::chrono::milliseconds>(time_now - last_activation_read).count(); 
+
+
     if(diff >= 100){
-        writeSerial();
-        last_activation_write  = time_now;
+        readSerial();
+        last_activation_read = time_now;
     }
-    //time_now = std::chrono::high_resolution_clock::now();
-    //diff = std::chrono::duration_cast<std::chrono::milliseconds>(time_now - last_activation_read).count(); 
-
-
-    //if(diff >= 100){
-        //readSerial();
-        //last_activation_read = time_now;
-    //}
 
     //time_now = std::chrono::high_resolution_clock::now();
     //diff = std::chrono::duration_cast<std::chrono::milliseconds>(time_now - last_activation_read).count(); 
 
 
 
-    //if(diff >= 100){
-        //publishPositions(publisher);
-        //last_activation_read = time_now;
-    //}
+    if(diff >= 100){
+        publishPositions(publisher);
+        last_activation_read = time_now;
+    }
 
 
     ros::spinOnce();
