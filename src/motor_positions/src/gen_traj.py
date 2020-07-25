@@ -11,7 +11,7 @@ import pdb
 rospy.init_node('trajectories', anonymous=True)
 pub = rospy.Publisher("dynamixel_control", controlTable, queue_size=10)
 rate = rospy.Rate(10) # 10hz
-test = controlTable()
+msg = controlTable()
 
 path = np.array([
         [2173, 2526, 1412, 2502],
@@ -24,6 +24,7 @@ path = np.array([
 out = mstraj(path, dt=0.1, tacc=1, tsegment=[2, 2, 2])
 
 move_msg = controlTable()
+
 while True:
     for move in out.q:
         # pdb.set_trace()

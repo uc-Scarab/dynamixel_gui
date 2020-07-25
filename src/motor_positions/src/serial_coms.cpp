@@ -12,7 +12,6 @@
 #include <chrono>
 
 #include "ros/ros.h"
-#include "std_msgs/String.h"
 #include <sstream>
 #include <motor_positions/motorPosition.h>
 #include <motor_positions/positionArray.h>
@@ -31,8 +30,6 @@ serial::Serial teensy_serial(port, baud, serial::Timeout::simpleTimeout(1000));
 
 vector<motor_positions::controlTable> controlMessages{};
 vector<motor_positions::positionArray> recievedPositions{};
-
-
 
 void my_sleep(unsigned long milliseconds){
             // usleep takes microseconds which are a 1000 times smaller than milliseconds
@@ -87,7 +84,7 @@ void readSerial(){
                     int payload = int(check_buffer[2]);
                     uint8_t message_buffer[payload];
                     teensy_serial.read(message_buffer, payload);
-
+                    //TODO: add comment about for loop structure
                     for(int i=0;i<payload -3;i+=3){
                         //cout << "id:" << int(message_buffer[i]) << std::endl;
                         int int_id = int(message_buffer[i]);
@@ -107,10 +104,10 @@ void readSerial(){
 
                     recievedPositions.push_back(msg);
 
-                    ////if (message_buffer[payload - 1] != 244){
-                        ////ROS_ERROR_STREAM("back check" << message_buffer[payload - 1]);
-                    ////teensy_serial.flushInput();
-                    ////}
+                    if (message_buffer[payload - 1] != 244){
+                        ROS_ERROR_STREAM("back check" << message_buffer[payload - 1]);
+                    teensy_serial.flushInput();
+                    }
         }
                     
                 }
@@ -144,10 +141,9 @@ int main(int argc, char**argv){
     auto last_activation_write = std::chrono::high_resolution_clock::now();
 ;
 auto last_activation_read = std::chrono::high_resolution_clock::now();
-;
 
     auto time_now = std::chrono::high_resolution_clock::now();
-;
+
     auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(time_now - last_activation_read).count(); 
 
     ros::Rate rate(10);
