@@ -49,11 +49,13 @@ void writeSerial(){
             control_buffer[i*4 + 3] = UPPER_BYTE(controlMessages[i+3].value);
         }
 
-        controlMessages.clear();
 
         control_buffer[controlMessages.size() + 4] = 244;
 
+
         teensy_serial.write(control_buffer, controlMessages.size() + 1);
+
+        controlMessages.clear();
         }
 }
 
@@ -143,7 +145,7 @@ auto last_activation_read = std::chrono::high_resolution_clock::now();
     diff = std::chrono::duration_cast<std::chrono::milliseconds>(time_now - last_activation_write).count(); 
 
     if(diff >= SendRate){
-        readSerial();
+        //readSerial();
         writeSerial();
         publishPositions(publisher);
         last_activation_read = time_now;

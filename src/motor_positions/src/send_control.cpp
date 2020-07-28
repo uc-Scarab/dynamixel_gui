@@ -14,11 +14,26 @@ int main(int argc, char**argv){
 
    ros::Publisher publish = node.advertise<motor_positions::controlTable>("dynamixel_control", 60);
 
+   motor_positions::controlTable msg;
+
    bool alt = true;
-   //
     while(ros::ok()){
 
-usleep(5000);
+    for(int i=10 ; i<11; i++ ){ 
+       if(alt){
+            msg.value = 2048;
+        } else {
+            msg.value = 3000;
+        }
+        msg.motor_id = i;
+        msg.command_id = GOAL_POSITION;
+        publish.publish(msg);
+        ROS_INFO_STREAM(msg);
+
+        usleep(2000000);
+
+        alt = !alt;
+    }
 
         }
     
