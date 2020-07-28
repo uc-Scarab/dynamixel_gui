@@ -44,6 +44,7 @@ void writeSerial(){
         for(motor_positions::controlTable msg: controlMessages){
             ROS_INFO_STREAM(msg);
             control_buffer[msg_count] = msg.motor_id;
+            ROS_INFO_STREAM(control_buffer[msg_count]);
             control_buffer[msg_count + 1] = msg.command_id;
                
             control_buffer[msg_count + 2] = LOWER_BYTE(msg.value);
@@ -51,6 +52,8 @@ void writeSerial(){
 
             msg_count += 4;
         }
+
+        controlMessages.clear();
 
         control_buffer[controlMessages.size() + 2] = 244;
 
@@ -107,6 +110,7 @@ void readSerial(){
 
 
 void controlCallback(motor_positions::controlTable msg) {
+    ROS_INFO("running");
         controlMessages.push_back(msg);
 
 }
@@ -153,9 +157,9 @@ auto last_activation_read = std::chrono::high_resolution_clock::now();
 
 
     if(diff >= SendRate){
-        readSerial();
+        //readSerial();
         writeSerial();
-        publishPositions(publisher);
+        //publishPositions(publisher);
         last_activation_read = time_now;
     }
 
@@ -172,6 +176,6 @@ auto last_activation_read = std::chrono::high_resolution_clock::now();
     //std::string port = "/dev/ttyACM0";
    //int baud = 115200;
 
-    return 0;
+    //return 0;
     
 }
