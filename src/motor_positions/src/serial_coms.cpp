@@ -4,6 +4,7 @@
 #include <cstdio>
 #include "ros/init.h"
 #include "ros/publisher.h"
+//#include "serial/serial.h"
 #include "serial/serial.h"
 #include <math.h>
 #include <std_msgs/String.h>
@@ -34,28 +35,27 @@ vector<motor_positions::controlTable> controlMessages{};
 vector<motor_positions::positionArray> recievedPositions{};
 
 void writeSerial(){
-        if (controlMessages.size() != 0){ 
-        uint8_t control_buffer[controlMessages.size()];
+        if (controlMessages.size() != 0){
+        uint16_t bufferTransformSize = controlMessages.size()+4;
+        uint8_t control_buffer[bufferTransformSize];
         control_buffer[0] = LOWER_BYTE(60000);
         control_buffer[1] = UPPER_BYTE(60000);
-        control_buffer[2] = controlMessages.size()+1;
+        control_buffer[2] = controlMessages.size();
         
         for(int i = 0; i<controlMessages.size();i++){
-            //ROS_INFO_STREAM(msg);
-            control_buffer[i*4] = controlMessages[i].motor_id;
-            control_buffer[i*4 + 1] = controlMessages[i+1].command_id;
+            control_buffer[(i*4) + 3] = controlMessages[i].motor_id;
+            control_buffer[(i*4) + 4] = controlMessages[i+1].command_id;
                
-            control_buffer[i*4 + 2] = LOWER_BYTE(controlMessages[i+2].value);
-            control_buffer[i*4 + 3] = UPPER_BYTE(controlMessages[i+3].value);
+            control_buffer[(i*4) + 5] = LOWER_BYTE(controlMessages[i+2].value);
+            control_buffer[(i*4) + 6] = UPPER_BYTE(controlMessages[i+3].value);
         }
 
-
-        control_buffer[controlMessages.size() + 4] = 244;
-
-
-        teensy_serial.write(control_buffer, controlMessages.size() + 1);
-
         controlMessages.clear();
+
+        control_buffer[bufferTransformSize+1] = 244;
+
+
+        teensy_serial.write(control_buffer, bufferTransformSize+1);
         }
 }
 
@@ -145,7 +145,7 @@ auto last_activation_read = std::chrono::high_resolution_clock::now();
     diff = std::chrono::duration_cast<std::chrono::milliseconds>(time_now - last_activation_write).count(); 
 
     if(diff >= SendRate){
-        //readSerial();
+        readSerial();
         writeSerial();
         publishPositions(publisher);
         last_activation_read = time_now;
