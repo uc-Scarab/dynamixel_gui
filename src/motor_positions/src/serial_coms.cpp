@@ -38,21 +38,20 @@ void writeSerial(){
         uint8_t control_buffer[controlMessages.size()];
         control_buffer[0] = LOWER_BYTE(60000);
         control_buffer[1] = UPPER_BYTE(60000);
-        control_buffer[2] = controlMessages.size() + 1;
+        control_buffer[2] = controlMessages.size()+1;
         
-        int msg_count = 3;
-        for(motor_positions::controlTable msg: controlMessages){
-            ROS_INFO_STREAM(msg);
-            control_buffer[msg_count] = msg.motor_id;
-            control_buffer[msg_count + 1] = msg.command_id;
+        for(int i = 0; i<controlMessages.size();i++){
+            //ROS_INFO_STREAM(msg);
+            control_buffer[i*4] = controlMessages[i].motor_id;
+            control_buffer[i*4 + 1] = controlMessages[i+1].command_id;
                
-            control_buffer[msg_count + 2] = LOWER_BYTE(msg.value);
-            control_buffer[msg_count + 3] = UPPER_BYTE(msg.value);
-
-            msg_count += 4;
+            control_buffer[i*4 + 2] = LOWER_BYTE(controlMessages[i+2].value);
+            control_buffer[i*4 + 3] = UPPER_BYTE(controlMessages[i+3].value);
         }
 
-        control_buffer[controlMessages.size() + 2] = 244;
+        controlMessages.clear();
+
+        control_buffer[controlMessages.size() + 4] = 244;
 
         teensy_serial.write(control_buffer, controlMessages.size() + 1);
         }
@@ -108,7 +107,6 @@ void readSerial(){
 
 void controlCallback(motor_positions::controlTable msg) {
         controlMessages.push_back(msg);
-
 }
 
 void publishPositions(ros::Publisher pub){
@@ -116,7 +114,7 @@ void publishPositions(ros::Publisher pub){
         for(motor_positions::positionArray array : recievedPositions){
             pub.publish(array);
         }
-
+        recievedPositions.clear();
     }
 }
 
@@ -125,9 +123,9 @@ int main(int argc, char**argv){
     ros::init(argc, argv, "publish_positions");
     ros::NodeHandle node;
 
-    ros::Subscriber sub = node.subscribe("dynamixel_control", 1000, controlCallback);
+    ros::Subscriber sub = node.subscribe("dynamixel_control", 100, controlCallback);
 
-   ros::Publisher publisher = node.advertise<motor_positions::positionArray>("publisher_positions", 1);
+   ros::Publisher publisher = node.advertise<motor_positions::positionArray>("publisher_positions", 100);
 
     auto last_activation_write = std::chrono::high_resolution_clock::now();
 ;
@@ -144,33 +142,15 @@ auto last_activation_read = std::chrono::high_resolution_clock::now();
     time_now = std::chrono::high_resolution_clock::now();
     diff = std::chrono::duration_cast<std::chrono::milliseconds>(time_now - last_activation_write).count(); 
 
-    //if(diff >= 100){
-        //writeSerial();
-        //last_activation_write  = time_now;
-    //}
-    //time_now = std::chrono::high_resolution_clock::now();
-    //diff = std::chrono::duration_cast<std::chrono::milliseconds>(time_now - last_activation_read).count(); 
-
-
     if(diff >= SendRate){
         readSerial();
         writeSerial();
         publishPositions(publisher);
         last_activation_read = time_now;
     }
-
-    //time_now = std::chrono::high_resolution_clock::now();
-    //diff = std::chrono::duration_cast<std::chrono::milliseconds>(time_now - last_activation_read).count(); 
-
     ros::spinOnce();
     rate.sleep();
-
     }
- 
-    //SerialComs teensy_serial(node); 
-    
-    //std::string port = "/dev/ttyACM0";
-   //int baud = 115200;
 
     return 0;
     
