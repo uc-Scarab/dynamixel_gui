@@ -22,24 +22,22 @@ int main(int argc, char**argv){
      
     motor_positions::controlTable msg;
 
-    usleep(2000000);
-
-    for(int i=13 ; i<17; i++ ){ 
+    for(int i=1 ; i<24; i++ ){
        if(alt){
-            msg.value = 2048;
+            msg.value = 0;
         } else {
-            msg.value = 2048;
+            msg.value = 0;
         }
         msg.motor_id = i;
-        msg.command_id = GOAL_POSITION;
+        msg.command_id = 34;
         publish.publish(msg);
         ROS_INFO_STREAM(msg);
 
-        usleep(2000000);
+
 
         alt = !alt;
     }
-
+usleep(5000000);
 
         }
     

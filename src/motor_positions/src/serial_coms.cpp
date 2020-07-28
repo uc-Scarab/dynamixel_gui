@@ -17,6 +17,8 @@
 #include <motor_positions/positionArray.h>
 #include <motor_positions/controlTable.h>
 
+#define SendRate 20 //50 Hz return structure
+
 #define UPPER_BYTE(b) (b >> 8) //defines byte structure 
 #define LOWER_BYTE(b) (b & 0xff)
 #define INT_JOIN_BYTE(u, l) (u << 8) | l
@@ -30,15 +32,6 @@ serial::Serial teensy_serial(port, baud, serial::Timeout::simpleTimeout(1000));
 
 vector<motor_positions::controlTable> controlMessages{};
 vector<motor_positions::positionArray> recievedPositions{};
-
-void my_sleep(unsigned long milliseconds){
-            // usleep takes microseconds which are a 1000 times smaller than milliseconds
-            usleep(milliseconds*1000);
-    }
-
-
-
-
 
 void writeSerial(){
         if (controlMessages.size() != 0){ 
@@ -62,9 +55,6 @@ void writeSerial(){
         control_buffer[controlMessages.size() + 2] = 244;
 
         teensy_serial.write(control_buffer, controlMessages.size() + 1);
-        
-        
-
         }
 }
 
@@ -118,6 +108,7 @@ void readSerial(){
 
 void controlCallback(motor_positions::controlTable msg) {
         controlMessages.push_back(msg);
+
 }
 
 void publishPositions(ros::Publisher pub){
@@ -146,9 +137,9 @@ auto last_activation_read = std::chrono::high_resolution_clock::now();
 
     auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(time_now - last_activation_read).count(); 
 
-    ros::Rate rate(10);
+    ros::Rate rate(1000);
 
-        while(1){
+        while(1) {
 
     time_now = std::chrono::high_resolution_clock::now();
     diff = std::chrono::duration_cast<std::chrono::milliseconds>(time_now - last_activation_write).count(); 
@@ -161,21 +152,15 @@ auto last_activation_read = std::chrono::high_resolution_clock::now();
     //diff = std::chrono::duration_cast<std::chrono::milliseconds>(time_now - last_activation_read).count(); 
 
 
-    if(diff >= 100){
+    if(diff >= SendRate){
         readSerial();
+        writeSerial();
+        publishPositions(publisher);
         last_activation_read = time_now;
     }
 
     //time_now = std::chrono::high_resolution_clock::now();
     //diff = std::chrono::duration_cast<std::chrono::milliseconds>(time_now - last_activation_read).count(); 
-
-
-
-    if(diff >= 100){
-        publishPositions(publisher);
-        last_activation_read = time_now;
-    }
-
 
     ros::spinOnce();
     rate.sleep();
