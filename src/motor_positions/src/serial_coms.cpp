@@ -23,12 +23,13 @@
 #define UPPER_BYTE(b) (b >> 8) //defines byte structure 
 #define LOWER_BYTE(b) (b & 0xff)
 #define INT_JOIN_BYTE(u, l) (u << 8) | l
+#define HeaderValue 9000
 using std::vector;
 using std::chrono::system_clock;
 using std::chrono::milliseconds;
 
 std::string port = "/dev/ttyACM0";
-int baud = 115200;
+int baud = 9600;
 serial::Serial teensy_serial(port, baud, serial::Timeout::simpleTimeout(1000));
 
 vector<motor_positions::controlTable> controlMessages{};
@@ -36,26 +37,37 @@ vector<motor_positions::positionArray> recievedPositions{};
 
 void writeSerial(){
         if (controlMessages.size() != 0){
-        uint16_t bufferTransformSize = controlMessages.size()+4;
+        uint16_t bufferTransformSize = (controlMessages.size()*4)+4;
+        std::cout << "BufferInputSize:" << bufferTransformSize << std::endl;
         uint8_t control_buffer[bufferTransformSize];
-        control_buffer[0] = LOWER_BYTE(60000);
-        control_buffer[1] = UPPER_BYTE(60000);
-        control_buffer[2] = controlMessages.size();
+        control_buffer[0] = LOWER_BYTE(uint16_t(HeaderValue));
+        control_buffer[1] = UPPER_BYTE(uint16_t(HeaderValue));
+        control_buffer[2] = controlMessages.size()*4+1;
         
+        std::cout << "Payload:" << int(control_buffer[2]) << std::endl;
+
+        std::cout << "Messages Needed to be sent:" << int(controlMessages.size()) << std::endl;
+        std::cout << "Control Buffer is length of:" << sizeof (control_buffer) << std::endl;
+        std::cout << "Control Buffer[0] is length of:" << int(control_buffer[0]) << std::endl;
+        std::cout << "Control Buffer[1] is length of:" << int(control_buffer[1]) << std::endl;
+        std::cout << "Control Buffer[2] is length of:" << int(control_buffer[2]) << std::endl;
+
         for(int i = 0; i<controlMessages.size();i++){
             control_buffer[(i*4) + 3] = controlMessages[i].motor_id;
-            control_buffer[(i*4) + 4] = controlMessages[i+1].command_id;
+            control_buffer[(i*4) + 4] = controlMessages[i].command_id;
                
-            control_buffer[(i*4) + 5] = LOWER_BYTE(controlMessages[i+2].value);
-            control_buffer[(i*4) + 6] = UPPER_BYTE(controlMessages[i+3].value);
+            control_buffer[(i*4) + 5] = LOWER_BYTE(controlMessages[i].value);
+            control_buffer[(i*4) + 6] = UPPER_BYTE(controlMessages[i].value);
         }
 
         controlMessages.clear();
 
-        control_buffer[bufferTransformSize+1] = 244;
+        control_buffer[bufferTransformSize-1] = 244;
+        
+        std::cout << "Final control buffer is length of:" << uint8_t(bufferTransformSize-1) << "   "<< (uint8_t)control_buffer[bufferTransformSize-1] << std::endl;
 
 
-        teensy_serial.write(control_buffer, bufferTransformSize+1);
+        teensy_serial.write(control_buffer, bufferTransformSize-1);
         }
 }
 
@@ -129,26 +141,22 @@ int main(int argc, char**argv){
 
    ros::Publisher publisher = node.advertise<motor_positions::positionArray>("publisher_positions", 100);
 
-    auto last_activation_write = std::chrono::high_resolution_clock::now();
-;
-auto last_activation_read = std::chrono::high_resolution_clock::now();
+    uint64_t activation_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 
-    auto time_now = std::chrono::high_resolution_clock::now();
-
-    auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(time_now - last_activation_read).count(); 
+    uint64_t difference = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 
     ros::Rate rate(1000);
 
         while(1) {
 
-    time_now = std::chrono::high_resolution_clock::now();
-    diff = std::chrono::duration_cast<std::chrono::milliseconds>(time_now - last_activation_write).count(); 
+    difference = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 
-    if(diff >= SendRate){
+    if((difference - activation_time) >= SendRate){
+        ROS_INFO_STREAM("Hit Timer Parameter");
         readSerial();
-        writeSerial();
         publishPositions(publisher);
-        last_activation_read = time_now;
+        writeSerial();
+        activation_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     }
     ros::spinOnce();
     rate.sleep();

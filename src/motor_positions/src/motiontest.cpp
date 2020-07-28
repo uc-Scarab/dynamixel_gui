@@ -19,24 +19,13 @@ int main(int argc, char**argv){
    bool alt = true;
     while(ros::ok()){
 
-    for(int i=1 ; i<=24; i++ ){
-       if(alt){
-            msg.value = 0;
-        } else {
-            msg.value = 0;
-        }
-        msg.motor_id = i;
-        msg.command_id = 34;
+
+        msg.value = 1300;
+        msg.motor_id = 22;
+        msg.command_id = 58;
         publish.publish(msg);
-        ROS_INFO_STREAM(msg);
-
-
-
-        alt = !alt;
-        usleep(20000);
+        usleep(200000);
     }
-
-        }
     
      return 0; 
     } 
