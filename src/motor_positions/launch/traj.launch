@@ -1,0 +1,6 @@
+<launch>
+
+    <node pkg="motor_positions" name="serial_coms" type="publish_positions"/>
+    <node pkg="motor_positions" name="traj" type="gen_traj.py"/>
+  </launch>
+
