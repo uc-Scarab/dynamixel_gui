@@ -1,7 +1,7 @@
 <launch>
 
-    <node pkg="motor_positions" name="serial_coms" type="serial_coms"/>
-    <node pkg="motor_positions" name="senderTest" type="send_control"/>
+    <node pkg="motor_positions" name="serial_coms" type="serial_coms" output="screen" launch-prefix="xterm -e" />
+    <node pkg="motor_positions" name="senderTest" type="send_control" output="screen" launch-prefix="xterm -e" />
 
   </launch>
 
