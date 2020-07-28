@@ -4,3 +4,5 @@ script.sh
 out.txt
 */venv/
 .clangd/
+node_modules/
+yarn.lock
