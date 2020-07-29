@@ -29,7 +29,7 @@ using std::chrono::system_clock;
 using std::chrono::milliseconds;
 
 std::string port = "/dev/ttyACM0";
-int baud = 9600;
+int baud = 12000000;
 serial::Serial teensy_serial(port, baud, serial::Timeout::simpleTimeout(1000));
 
 vector<motor_positions::controlTable> controlMessages{};
@@ -37,7 +37,13 @@ vector<motor_positions::positionArray> recievedPositions{};
 
 void writeSerial(){
         if (controlMessages.size() != 0){
-        uint16_t bufferTransformSize = (controlMessages.size()*4)+4;
+           uint8_t bufferTransformSize;
+        if(controlMessages.size()<12){
+             bufferTransformSize= (controlMessages.size()*4)+4;
+        }else{
+             bufferTransformSize = (11*4)+4;
+        }
+
         std::cout << "BufferInputSize:" << bufferTransformSize << std::endl;
         uint8_t control_buffer[bufferTransformSize];
         control_buffer[0] = LOWER_BYTE(uint16_t(HeaderValue));
@@ -52,15 +58,28 @@ void writeSerial(){
         std::cout << "Control Buffer[1] is length of:" << int(control_buffer[1]) << std::endl;
         std::cout << "Control Buffer[2] is length of:" << int(control_buffer[2]) << std::endl;
 
-        for(int i = 0; i<controlMessages.size();i++){
+        /*for(int i = 0; i<55;i++){
             control_buffer[(i*4) + 3] = controlMessages[i].motor_id;
             control_buffer[(i*4) + 4] = controlMessages[i].command_id;
                
             control_buffer[(i*4) + 5] = LOWER_BYTE(controlMessages[i].value);
             control_buffer[(i*4) + 6] = UPPER_BYTE(controlMessages[i].value);
-        }
+        }*/
+        int i=0;
+        while(controlMessages.size()>0)
+        {
+            control_buffer[(i*4) + 3] = controlMessages[i].motor_id;
+            control_buffer[(i*4) + 4] = controlMessages[i].command_id;
 
-        controlMessages.clear();
+            control_buffer[(i*4) + 5] = LOWER_BYTE(controlMessages[i].value);
+            control_buffer[(i*4) + 6] = UPPER_BYTE(controlMessages[i].value);
+            controlMessages.erase(controlMessages.begin());
+            i++;
+            if(i>11){
+                break;
+            }
+
+        }
 
         control_buffer[bufferTransformSize-1] = 244;
         
