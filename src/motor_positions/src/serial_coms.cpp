@@ -10,7 +10,8 @@
 #include <std_msgs/String.h>
 #include <unistd.h>
 #include <chrono>
-#include <deque>
+#include <queue>
+#include <algorithm>
 
 #include "ros/ros.h"
 #include <sstream>
@@ -24,26 +25,21 @@
 #define LOWER_BYTE(b) (b & 0xff)
 #define INT_JOIN_BYTE(u, l) (u << 8) | l
 #define HeaderValue 60000 
-using std::deque;
+using std::queue;
 using std::vector;
 using std::chrono::system_clock;
 using std::chrono::milliseconds;
 
-std::string port = "/dev/ttyACM4";
+std::string port = "/dev/ttyACM0";
 int baud = 115200;
 serial::Serial teensy_serial(port, baud, serial::Timeout::simpleTimeout(1000));
 
-deque<motor_positions::controlTable> controlMessages{};
-deque<motor_positions::positionArray> recievedPositions{};
+queue<motor_positions::controlTable> controlMessages{};
+vector<motor_positions::positionArray> recievedPositions{};
 
 void writeSerial(){
-        if (controlMessages.size() != 0){
-           uint8_t bufferTransformSize;
-        if(controlMessages.size()<12){
-             bufferTransformSize= (controlMessages.size()*4)+4;
-        }else{
-             bufferTransformSize = (11*4)+4;
-        }
+    if(controlMessages.size() > 0){
+        uint8_t bufferTransformSize = (controlMessages.size() * 4) + 4;
 
         ROS_INFO_STREAM("BufferInputSize:" << bufferTransformSize); 
         uint8_t control_buffer[bufferTransformSize];
@@ -66,8 +62,10 @@ void writeSerial(){
             control_buffer[(i*4) + 5] = LOWER_BYTE(current_messages.value);
             control_buffer[(i*4) + 6] = UPPER_BYTE(current_messages.value);
         }*/
-        int i=0;
-        while(controlMessages.size()>0)
+        
+        
+        int max_size = std::min(40, int(controlMessages.size())) ;
+        for(int i = 0; i<max_size;i++)
         {
             motor_positions::controlTable current_messages = controlMessages.front();
             control_buffer[(i*4) + 3] = current_messages.motor_id;
@@ -75,7 +73,7 @@ void writeSerial(){
 
             control_buffer[(i*4) + 5] = LOWER_BYTE(current_messages.value);
             control_buffer[(i*4) + 6] = UPPER_BYTE(current_messages.value);
-            controlMessages.pop_front();
+            controlMessages.pop();
             i++;
         }
 
@@ -84,9 +82,10 @@ void writeSerial(){
         std::cout << "Final control buffer is length of:" << uint8_t(bufferTransformSize-1) << "   "<< (uint8_t)control_buffer[bufferTransformSize-1] << std::endl;
 
 
-        teensy_serial.write(control_buffer, bufferTransformSize-1);
+        teensy_serial.write(control_buffer, bufferTransformSize);
+    }
         }
-}
+
 
         
 void readSerial(){
@@ -137,7 +136,7 @@ void readSerial(){
 
 
 void controlCallback(motor_positions::controlTable msg) {
-        controlMessages.push_back(msg);
+        controlMessages.push(msg);
 }
 
 void publishPositions(ros::Publisher pub){
@@ -158,25 +157,19 @@ int main(int argc, char**argv){
 
    ros::Publisher publisher = node.advertise<motor_positions::positionArray>("publisher_positions", 100);
 
-    uint64_t activation_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-
-    uint64_t difference = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-
     ros::Rate rate(20);
 
-        while(1) {
+    while(1) {
 
-    difference = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+//difference = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 
-    if((difference - activation_time) >= SendRate){
-        ROS_INFO_STREAM("difference" << difference);
-        readSerial();
-        publishPositions(publisher);
-        writeSerial();
-        activation_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-    }
-    ros::spinOnce();
-    rate.sleep();
+    //ROS_INFO_STREAM("difference" << difference);
+    readSerial();
+    publishPositions(publisher);
+    writeSerial();
+    //activation_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+rate.sleep();
+ros::spinOnce();
     }
 
     return 0;
