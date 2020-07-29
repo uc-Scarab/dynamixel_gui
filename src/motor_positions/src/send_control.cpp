@@ -21,9 +21,9 @@ int main(int argc, char**argv){
 
     for(int i=1 ; i<=24; i++ ){
        if(alt){
-            msg.value = 1;
+            msg.value = 0;
         } else {
-            msg.value = 1;
+            msg.value = 0;
         }
         msg.motor_id = i;
         msg.command_id = 34;
