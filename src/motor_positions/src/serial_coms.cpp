@@ -29,7 +29,7 @@ using std::vector;
 using std::chrono::system_clock;
 using std::chrono::milliseconds;
 
-std::string port = "/dev/ttyACM1";
+std::string port = "/dev/ttyACM2";
 int baud = 115200;
 serial::Serial teensy_serial(port, baud, serial::Timeout::simpleTimeout(1000));
 
@@ -60,21 +60,20 @@ void writeSerial(){
         //std::cout << "Control Buffer[2] is length of:" << int(control_buffer[2]) << std::endl;
 
         /*for(int i = 0; i<55;i++){
-            control_buffer[(i*4) + 3] = current_message.motor_id;
-            control_buffer[(i*4) + 4] = current_message.command_id;
+            control_buffer[(i*4) + 3] = controlMessages[i].motor_id;
+            control_buffer[(i*4) + 4] = controlMessages[i].command_id;
                
-            control_buffer[(i*4) + 5] = LOWER_BYTE(current_message.value);
-            control_buffer[(i*4) + 6] = UPPER_BYTE(current_message.value);
+            control_buffer[(i*4) + 5] = LOWER_BYTE(controlMessages[i].value);
+            control_buffer[(i*4) + 6] = UPPER_BYTE(controlMessages[i].value);
         }*/
         int i=0;
         while(controlMessages.size()>0)
         {
-            motor_positions::controlTable current_message = controlMessages.front();
-            control_buffer[(i*4) + 3] = current_message.motor_id;
-            control_buffer[(i*4) + 4] = current_message.command_id;
+            control_buffer[(i*4) + 3] = controlMessages[i].motor_id;
+            control_buffer[(i*4) + 4] = controlMessages[i].command_id;
 
-            control_buffer[(i*4) + 5] = LOWER_BYTE(current_message.value);
-            control_buffer[(i*4) + 6] = UPPER_BYTE(current_message.value);
+            control_buffer[(i*4) + 5] = LOWER_BYTE(controlMessages[i].value);
+            control_buffer[(i*4) + 6] = UPPER_BYTE(controlMessages[i].value);
             controlMessages.pop_front();
             i++;
         }
