@@ -302,6 +302,10 @@ Serial::SerialImpl::reconfigurePort ()
 #ifdef B4000000
   case 4000000: baud = B4000000; break;
 #endif
+#ifdef B12000000
+  case 12000000: baud = B12000000; break;
+#endif
+ 
   default:
     custom_baud = true;
     // OS X support

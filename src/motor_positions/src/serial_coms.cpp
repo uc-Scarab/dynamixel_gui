@@ -8,9 +8,9 @@
 #include "serial/serial.h"
 #include <math.h>
 #include <std_msgs/String.h>
-
 #include <unistd.h>
 #include <chrono>
+#include <deque>
 
 #include "ros/ros.h"
 #include <sstream>
@@ -23,17 +23,18 @@
 #define UPPER_BYTE(b) (b >> 8) //defines byte structure 
 #define LOWER_BYTE(b) (b & 0xff)
 #define INT_JOIN_BYTE(u, l) (u << 8) | l
-#define HeaderValue 9000
+#define HeaderValue 60000 
+using std::deque;
 using std::vector;
 using std::chrono::system_clock;
 using std::chrono::milliseconds;
 
-std::string port = "/dev/ttyACM0";
-int baud = 12000000;
+std::string port = "/dev/ttyACM1";
+int baud = 115200;
 serial::Serial teensy_serial(port, baud, serial::Timeout::simpleTimeout(1000));
 
-vector<motor_positions::controlTable> controlMessages{};
-vector<motor_positions::positionArray> recievedPositions{};
+deque<motor_positions::controlTable> controlMessages{};
+deque<motor_positions::positionArray> recievedPositions{};
 
 void writeSerial(){
         if (controlMessages.size() != 0){
@@ -44,41 +45,38 @@ void writeSerial(){
              bufferTransformSize = (11*4)+4;
         }
 
-        std::cout << "BufferInputSize:" << bufferTransformSize << std::endl;
+        ROS_INFO_STREAM("BufferInputSize:" << bufferTransformSize); 
         uint8_t control_buffer[bufferTransformSize];
         control_buffer[0] = LOWER_BYTE(uint16_t(HeaderValue));
         control_buffer[1] = UPPER_BYTE(uint16_t(HeaderValue));
         control_buffer[2] = controlMessages.size()*4+1;
         
-        std::cout << "Payload:" << int(control_buffer[2]) << std::endl;
+        ROS_INFO_STREAM("Payload:" << int(control_buffer[2]));
 
-        std::cout << "Messages Needed to be sent:" << int(controlMessages.size()) << std::endl;
-        std::cout << "Control Buffer is length of:" << sizeof (control_buffer) << std::endl;
-        std::cout << "Control Buffer[0] is length of:" << int(control_buffer[0]) << std::endl;
-        std::cout << "Control Buffer[1] is length of:" << int(control_buffer[1]) << std::endl;
-        std::cout << "Control Buffer[2] is length of:" << int(control_buffer[2]) << std::endl;
+        ROS_INFO_STREAM("Messages Needed to be sent:" << int(controlMessages.size())); 
+        ROS_INFO_STREAM("Control Buffer is length of:" << sizeof (control_buffer));
+        //std::cout << "Control Buffer[0] is length of:" << int(control_buffer[0]) << std::endl;
+        //std::cout << "Control Buffer[1] is length of:" << int(control_buffer[1]) << std::endl;
+        //std::cout << "Control Buffer[2] is length of:" << int(control_buffer[2]) << std::endl;
 
         /*for(int i = 0; i<55;i++){
-            control_buffer[(i*4) + 3] = controlMessages[i].motor_id;
-            control_buffer[(i*4) + 4] = controlMessages[i].command_id;
+            control_buffer[(i*4) + 3] = current_message.motor_id;
+            control_buffer[(i*4) + 4] = current_message.command_id;
                
-            control_buffer[(i*4) + 5] = LOWER_BYTE(controlMessages[i].value);
-            control_buffer[(i*4) + 6] = UPPER_BYTE(controlMessages[i].value);
+            control_buffer[(i*4) + 5] = LOWER_BYTE(current_message.value);
+            control_buffer[(i*4) + 6] = UPPER_BYTE(current_message.value);
         }*/
         int i=0;
         while(controlMessages.size()>0)
         {
-            control_buffer[(i*4) + 3] = controlMessages[i].motor_id;
-            control_buffer[(i*4) + 4] = controlMessages[i].command_id;
+            motor_positions::controlTable current_message = controlMessages.front();
+            control_buffer[(i*4) + 3] = current_message.motor_id;
+            control_buffer[(i*4) + 4] = current_message.command_id;
 
-            control_buffer[(i*4) + 5] = LOWER_BYTE(controlMessages[i].value);
-            control_buffer[(i*4) + 6] = UPPER_BYTE(controlMessages[i].value);
-            controlMessages.erase(controlMessages.begin());
+            control_buffer[(i*4) + 5] = LOWER_BYTE(current_message.value);
+            control_buffer[(i*4) + 6] = UPPER_BYTE(current_message.value);
+            controlMessages.pop_front();
             i++;
-            if(i>11){
-                break;
-            }
-
         }
 
         control_buffer[bufferTransformSize-1] = 244;
@@ -164,14 +162,14 @@ int main(int argc, char**argv){
 
     uint64_t difference = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 
-    ros::Rate rate(1000);
+    ros::Rate rate(20);
 
         while(1) {
 
     difference = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 
     if((difference - activation_time) >= SendRate){
-        ROS_INFO_STREAM("Hit Timer Parameter");
+        ROS_INFO_STREAM("difference" << difference);
         readSerial();
         publishPositions(publisher);
         writeSerial();

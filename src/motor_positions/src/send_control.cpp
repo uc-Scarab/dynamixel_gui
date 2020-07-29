@@ -33,7 +33,7 @@ int main(int argc, char**argv){
 
 
         alt = !alt;
-        usleep(20000);
+        usleep(100000);
     }
 
         }
