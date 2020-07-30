@@ -4,3 +4,6 @@
 [submodule "src/motor_positions/scripts/robotics-toolbox-python"]
 	path = src/motor_positions/scripts/robotics-toolbox-python
 	url = https://github.com/petercorke/robotics-toolbox-python
+[submodule "src/motor_positions/ROS-msgs"]
+	path = src/motor_positions/ROS-msgs
+	url = https://github.com/uc-Scarab/ROS-msgs
