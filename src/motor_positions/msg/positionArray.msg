@@ -1,1 +1,0 @@
-motorPosition[] positions
