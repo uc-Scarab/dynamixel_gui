@@ -219,11 +219,11 @@ add_executable(serial_coms src/serial_coms.cpp)
 target_link_libraries(serial_coms ${catkin_LIBRARIES})
 add_dependencies(serial_coms roscpp serial std_msgs, message_generation ${catkin_EXPORTED_TARGETS})
 
-add_executable(send_control src/send_control)
+add_executable(send_control src/ROS-Testing/send_control)
 target_link_libraries(send_control ${catkin_LIBRARIES})
 add_dependencies(send_control roscpp serial ${catkin_EXPORTED_TARGETS})
 
-add_executable(test_subscribe src/test_subscribe)
+add_executable(test_subscribe src/ROS-Testing/test_subscribe)
 target_link_libraries(test_subscribe ${catkin_LIBRARIES})
 add_dependencies(test_subscribe roscpp serial ${catkin_EXPORTED_TARGETS})
 
