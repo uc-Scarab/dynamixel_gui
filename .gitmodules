@@ -10,3 +10,6 @@
 [submodule "ROS-Testing"]
 	path = src/motor_positions/src/ROS-Testing
 	url = https://github.com/uc-Scarab/ROS-Testing
+[submodule "ROS-Bridge"]
+	path = src/motor_positions/src/ROS-Bridge
+	url = https://github.com/uc-Scarab/ROS-Bridge
