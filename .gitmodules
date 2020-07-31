@@ -7,6 +7,3 @@
 [submodule "src/motor_positions/ROS-msgs"]
 	path = src/motor_positions/ROS-msgs
 	url = https://github.com/uc-Scarab/ROS-msgs
-[submodule "src/motor_positions/src/ROS-Testing"]
-	path = src/motor_positions/src/ROS-Testing
-	url = https://github.com/uc-Scarab/ROS-Testing
