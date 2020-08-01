@@ -215,7 +215,7 @@ catkin_install_python(PROGRAMS
 #catkin_install_python(PROGRAMS scripts/TrajUpload/robotPyTraj.py 
   #DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 #)
-add_executable(serial_coms src/ROS-Testing/serial_coms.cpp)
+add_executable(serial_coms src/ROS-Bridge/serial_coms.cpp)
 target_link_libraries(serial_coms ${catkin_LIBRARIES})
 add_dependencies(serial_coms roscpp serial std_msgs, message_generation ${catkin_EXPORTED_TARGETS})
 
@@ -228,4 +228,3 @@ target_link_libraries(test_subscribe ${catkin_LIBRARIES})
 add_dependencies(test_subscribe roscpp serial ${catkin_EXPORTED_TARGETS})
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
