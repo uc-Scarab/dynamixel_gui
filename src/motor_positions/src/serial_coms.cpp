@@ -159,7 +159,7 @@ int main(int argc, char**argv){
 
    ros::Publisher publisher = node.advertise<motor_positions::positionArray>("publisher_positions", 100);
 
-    ros::Rate rate(40);
+    ros::Rate rate(20);
 
     while(1) {
 
