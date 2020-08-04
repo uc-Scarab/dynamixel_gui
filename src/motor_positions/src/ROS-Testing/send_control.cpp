@@ -24,12 +24,12 @@ int main(int argc, char**argv){
 
     for(int i=1 ; i<24; i++ ){
        if(alt){
-            msg.value = 0;
+            msg.value = 2048;
         } else {
-            msg.value = 0;
+            msg.value = 2048;
         }
         msg.motor_id = i;
-        msg.command_id = 34;
+        msg.command_id = 58;
         publish.publish(msg);
         ROS_INFO_STREAM(msg);
 
