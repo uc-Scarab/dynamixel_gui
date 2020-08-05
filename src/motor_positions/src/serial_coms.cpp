@@ -64,7 +64,7 @@ void writeSerial(){
         }*/
         
         
-        int max_size = std::min(40, int(controlMessages.size())) ;
+        int max_size = std::min(11, int(controlMessages.size())) ;
         for(int i = 0; i<max_size;i++)
         {
             motor_positions::controlTable current_messages = controlMessages.front();
@@ -151,7 +151,11 @@ void publishPositions(ros::Publisher pub){
 
 int main(int argc, char**argv){
     std::cout << teensy_serial.isOpen() << std::endl;
-        
+
+    uint64_t activation_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+
+    uint64_t difference = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+
     ros::init(argc, argv, "publish_positions");
     ros::NodeHandle node;
 
@@ -159,19 +163,19 @@ int main(int argc, char**argv){
 
    ros::Publisher publisher = node.advertise<motor_positions::positionArray>("publisher_positions", 100);
 
-    ros::Rate rate(20);
+    ros::Rate rate(1000);
 
     while(1) {
 
-//difference = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-
-    //ROS_INFO_STREAM("difference" << difference);
+difference = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+ if((difference - activation_time) >= SendRate){
     readSerial();
     publishPositions(publisher);
     writeSerial();
-    //activation_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    activation_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 rate.sleep();
 ros::spinOnce();
+    }
     }
 
     return 0;
