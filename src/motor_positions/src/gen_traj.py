@@ -5,11 +5,12 @@ from roboticstoolbox import mstraj
 import numpy as np
 import math
 import pdb
+from time import sleep
 
 # from std_msgs.msg import String
 
 def radstoRaw(rads):
-    raw = rads/ 0.00153589  
+    raw = rads/ 0.00153589
     raw += 2048
     return(raw)
 
@@ -19,26 +20,27 @@ rate = rospy.Rate(10) # 10hz
 msg = controlTable()
 
 path = np.array([
+        [0, -0.4401, -0.6496, -0.7019],
         [0, 0, 0, 0],
-        [0, 0.4401, -0.4098, -0.0569]
+        [0, 0.4401, 0.6496, 0.7019]
         ])
 
 
-out = mstraj(path, dt=0.1, tacc=1, tsegment=[2])
+out = mstraj(path, dt=0.1, tacc=0.5, tsegment=[2, 2])
+# pdb.set_trace()
 move_msg = controlTable()
 
 for move in out.q:
     # pdb.set_trace()
     for count, via in enumerate(move):
-        move_msg.motor_id = count + 1 
+        move_msg.motor_id = count + 1
         move_msg.command_id = 58
         move_msg.value = math.ceil(radstoRaw(via))
         # print(move_msg.value)
 
         rospy.loginfo(move_msg)
         pub.publish(move_msg)
-    rate.sleep()
-
+    sleep(0.1)
 
 
 
