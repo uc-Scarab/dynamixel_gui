@@ -1,6 +1,6 @@
 [submodule "serial"]
 	path = serial
-	url = https://github.com/wjwwood/serial
+	url = https://github.com/uc-Scarab/serial
 [submodule "src/motor_positions/scripts/robotics-toolbox-python"]
 	path = src/motor_positions/scripts/robotics-toolbox-python
 	url = https://github.com/petercorke/robotics-toolbox-python
