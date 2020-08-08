@@ -22,7 +22,7 @@ int main(int argc, char**argv){
      
     motor_positions::controlTable msg;
 
-    for(int i=1 ; i<24; i++ ){
+    for(int i=1 ; i<25; i++ ){
        if(alt){
             msg.value = 2048;
         } else {
@@ -37,7 +37,7 @@ int main(int argc, char**argv){
 
         alt = !alt;
     }
-usleep(5000000);
+usleep(2000000);
 
         }
     
