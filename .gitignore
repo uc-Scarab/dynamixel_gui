@@ -6,3 +6,4 @@ out.txt
 .clangd/
 node_modules/
 yarn.lock
+src/motor_positions/.vscode/
