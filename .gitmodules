@@ -1,5 +1,5 @@
 [submodule "serial"]
-	path = serial
+	path = src/serial
 	url = https://github.com/uc-Scarab/serial
 [submodule "src/motor_positions/scripts/robotics-toolbox-python"]
 	path = src/motor_positions/scripts/robotics-toolbox-python
