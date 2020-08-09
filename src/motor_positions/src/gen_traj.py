@@ -6,6 +6,7 @@ import numpy as np
 import math
 import pdb
 from time import sleep
+from inv_kine import leg_ikine
 
 # from std_msgs.msg import String
 
@@ -19,14 +20,9 @@ pub = rospy.Publisher("dynamixel_control", controlTable, queue_size=60)
 rate = rospy.Rate(10) # 10hz
 msg = controlTable()
 
-path = np.array([
-        [0, -0.4401, -0.6496, -0.7019],
-        [0, 0, 0, 0],
-        [0, 0.4401, 0.6496, 0.7019]
-        ])
 
 
-out = mstraj(path, dt=0.2, tacc=0.5, tsegment=[1, 1])
+out = mstraj(path, dt=0.2, tacc=0.5, tsegment=[1])
 # pdb.set_trace()
 move_msg = controlTable()
 

@@ -1,5 +1,6 @@
 #! /usr/bin/env python3
 import rospy
+import numpy
 from math import atan2, sqrt, sin, cos, acos, pi
 
 def leg_ikine(x_in, y_in, z_in, o_in, f, a):
@@ -27,7 +28,9 @@ def leg_ikine(x_in, y_in, z_in, o_in, f, a):
 
         q[3] = o_in - (q[1] + q[2])
 
-        return(q)
+        numpy_q = numpy.array(q)
+
+        return(numpy_q)
 
     except ValueError:
         # print("Test")
