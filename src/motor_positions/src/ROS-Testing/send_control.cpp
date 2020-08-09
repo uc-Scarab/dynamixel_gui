@@ -28,7 +28,7 @@ int main(int argc, char**argv){
         } else {
             msg.value = 2048;
         }
-        msg.motor_id = i;
+        msg.dest = i;
         msg.command_id = 58;
         publish.publish(msg);
         ROS_INFO_STREAM(msg);

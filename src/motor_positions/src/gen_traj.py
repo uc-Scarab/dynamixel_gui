@@ -34,8 +34,8 @@ move_msg = controlTable()
 for move in path:
     # pdb.set_trace()
     for count, via in enumerate(move):
-        move_msg.motor_id = count + 1
-        move_msg.command_id = 58
+        move_msg.dest = count + 10
+        move_msg.command_id = 0
         move_msg.value = ceil(radstoRaw(via))
         # print(move_msg.value)
 

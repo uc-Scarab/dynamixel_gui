@@ -1,0 +1,57 @@
+enum INTERFACE_DEST {
+    SYSTEM, // RESERVED
+    META, // RESERVED
+    CONFIG_OPT, // RESERVED
+    SENSOR_IMU,
+    // Legs RESERVED
+    LEG_1,
+    LEG_2,
+    LEG_3,
+    LEG_4,
+    LEG_5,
+    LEG_6,
+    // Leg 1
+    JOINT_L1Q1,
+    JOINT_L1Q2,
+    JOINT_L1Q3,
+    JOINT_L1Q4,
+    // Leg 2
+    JOINT_L2Q1,
+    JOINT_L2Q2,
+    JOINT_L2Q3,
+    JOINT_L2Q4,
+    // Leg 3
+    JOINT_L3Q1,
+    JOINT_L3Q2,
+    JOINT_L3Q3,
+    JOINT_L3Q4,
+    // Leg 4
+    JOINT_L4Q1,
+    JOINT_L4Q2,
+    JOINT_L4Q3,
+    JOINT_L4Q4,
+    // Leg 5
+    JOINT_L5Q1,
+    JOINT_L5Q2,
+    JOINT_L5Q3,
+    JOINT_L5Q4,
+    // Leg 6
+    JOINT_L6Q1,
+    JOINT_L6Q2,
+    JOINT_L6Q3,
+    JOINT_L6Q4,
+};
+
+enum INTERFACE_CMD_DYNAMIXEL {
+    DYN_TARGET_POSITION,
+    DYN_CURRENT_POSITION,
+    DYN_TORQUE_LIMIT,
+    DYN_TORQUE_ENABLED,
+    DYN_CURRENT_LOAD,
+    DYN_TARGET_SPEED,
+    DYN_VOLTAGE,
+    DYN_TEMPERATURE,
+    DYN_ERROR_MSG,
+    DYN_PASSTHROUGH
+};
+
