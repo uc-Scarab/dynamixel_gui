@@ -30,14 +30,24 @@ path = np.row_stack((zeros, test))
 # out = mstraj(path, dt=0.2, tacc=0.5, tsegment=[1])
 pdb.set_trace()
 move_msg = controlTable()
+setup_msg = controlTable()
+
+for i in range(10, 14):
+    setup_msg.dest = i
+    setup_msg.command_id = 2
+    setup_msg.value = 500
+    pub.publish(setup_msg)
+
+    setup_msg.command_id = 5
+    pub.publish(setup_msg)
+    sleep(0.1)
+
 
 for move in path:
-    # pdb.set_trace()
     for count, via in enumerate(move):
         move_msg.dest = count + 10
         move_msg.command_id = 0
         move_msg.value = ceil(radstoRaw(via))
-        # print(move_msg.value)
 
         rospy.loginfo(move_msg)
         pub.publish(move_msg)

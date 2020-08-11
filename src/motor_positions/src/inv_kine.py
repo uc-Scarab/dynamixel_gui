@@ -28,8 +28,6 @@ def leg_ikine(x_in, y_in, z_in, o_in, f, a):
 
         q[3] = o_in - (q[1] + q[2])
 
-        q[3] = 3.1455 - q[3]
-
         return(q)
 
     except ValueError:
