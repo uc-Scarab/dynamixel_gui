@@ -18,29 +18,13 @@ def radstoRaw(rads):
 rospy.init_node('trajectories', anonymous=True)
 pub = rospy.Publisher("dynamixel_control", controlTable, queue_size=60)
 rate = rospy.Rate(10) # 10hz
-msg = controlTable()
-a = [0.62, 0.86, 0.70, 0.61]
 
-test = np.array(leg_ikine(1.5, 0, 0, -pi/2, -1, a))
+pose1 = [0, 0.4401, 0.6496, 0.7019]
+pose2 = [0, -0.4401, -0.6496, -0.7019]
 
-# zeros = np.array(
-        # [0, 0, 0, 0],
-        # )
-
-# qz = [0, 0, 0, 0]
-# qn = [0, 0.9484, -1.9477, -0.5715]
 setup_msg = controlTable()
-
-path = np.array([
-        [0, 0.4401, 0.6496, 0.7019],
-        [0, 0, 0, 0],
-        [0, -0.4401, -0.6496, -0.7019]
-        ])
-
-
-
 # path = np.row_stack((qz, qn))
-out = mstraj(path, dt=0.1, tacc=1, tsegment=[2, 2])
+# out = mstraj(path, dt=0.1, tacc=1, tsegment=[2, 2])
 for i in range(10, 14):
     setup_msg.dest = i
     setup_msg.command_id = 2
@@ -57,8 +41,13 @@ print("finish setup")
 
 pdb.set_trace()
 move_msg = controlTable()
+while not rospy.is_shutdown():
+    test = input()
+    if test == "1":
+        move = pose1
+    elif test == "2":
+        move = pose2
 
-for move in out.q:
     for count, via in enumerate(move):
         move_msg.dest = count + 10
         move_msg.command_id = 0
@@ -67,6 +56,4 @@ for move in out.q:
         rospy.loginfo(move_msg)
         pub.publish(move_msg)
         sleep(0.1)
-
-
 
