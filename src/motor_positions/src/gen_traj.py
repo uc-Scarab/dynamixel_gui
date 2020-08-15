@@ -28,6 +28,7 @@ path = np.array([
 
 out = mstraj(path, dt=0.2, tacc=0.5, tsegment=[1, 1])
 # pdb.set_trace()
+sleep(1)
 for i in range(10, 14):
     move_msg = controlTable()
     move_msg.dest = i
@@ -35,7 +36,7 @@ for i in range(10, 14):
     move_msg.value = 500
     rospy.loginfo(move_msg)
     pub.publish(move_msg)
-    sleep(2)
+    sleep(0.1)
 
 pdb.set_trace()
 for move in out.q:
