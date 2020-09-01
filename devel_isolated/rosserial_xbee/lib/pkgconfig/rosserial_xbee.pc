@@ -1,0 +1,8 @@
+prefix=/home/charles/devel/ros/scarab/scarab_ros/devel_isolated/rosserial_xbee
+
+Name: rosserial_xbee
+Description: Description of rosserial_xbee
+Version: 0.9.0
+Cflags: 
+Libs: -L/home/charles/devel/ros/scarab/scarab_ros/devel_isolated/rosserial_xbee/lib 
+Requires: 

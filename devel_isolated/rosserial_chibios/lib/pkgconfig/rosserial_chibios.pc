@@ -1,0 +1,8 @@
+prefix=/home/charles/devel/ros/scarab/scarab_ros/devel_isolated/rosserial_chibios
+
+Name: rosserial_chibios
+Description: Description of rosserial_chibios
+Version: 0.9.0
+Cflags: 
+Libs: -L/home/charles/devel/ros/scarab/scarab_ros/devel_isolated/rosserial_chibios/lib 
+Requires: 

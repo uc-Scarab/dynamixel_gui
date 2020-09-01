@@ -1,0 +1,8 @@
+prefix=/home/charles/devel/ros/scarab/scarab_ros/install_isolated
+
+Name: motor_positions
+Description: Description of motor_positions
+Version: 0.0.0
+Cflags: -I/home/charles/devel/ros/scarab/scarab_ros/install_isolated/include
+Libs: -L/home/charles/devel/ros/scarab/scarab_ros/install_isolated/lib 
+Requires: roscpp rospy message_generation message_runtime

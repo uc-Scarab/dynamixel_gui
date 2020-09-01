@@ -4,19 +4,21 @@ project(motor_positions)
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
 
+
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
+
 find_package(catkin REQUIRED COMPONENTS
   rospy
   roscpp
-  serial
   std_msgs
   message_generation
 )
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
+
 
 
 ## Uncomment this if the package has a setup.py. This macro ensures
@@ -113,7 +115,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
     INCLUDE_DIRS ${motor_positions_INCLUDE_DIRECTORIES}
 #  LIBRARIES motor_positions
-  CATKIN_DEPENDS roscpp rospy serial message_generation message_runtime
+  CATKIN_DEPENDS roscpp rospy message_generation message_runtime
 #  DEPENDS system_lib
 )
 
@@ -215,16 +217,16 @@ catkin_install_python(PROGRAMS
 #catkin_install_python(PROGRAMS scripts/TrajUpload/robotPyTraj.py 
   #DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 #)
-add_executable(serial_coms src/ROS-Bridge/serial_coms.cpp)
-target_link_libraries(serial_coms ${catkin_LIBRARIES})
-add_dependencies(serial_coms roscpp serial std_msgs, message_generation ${catkin_EXPORTED_TARGETS})
+#add_executable(serial_coms src/ROS-Bridge/serial_coms.cpp)
+#target_link_libraries(serial_coms ${catkin_LIBRARIES})
+#add_dependencies(serial_coms roscpp std_msgs message_generation ${catkin_EXPORTED_TARGETS})
 
 add_executable(send_control src/ROS-Testing/send_control)
 target_link_libraries(send_control ${catkin_LIBRARIES})
-add_dependencies(send_control roscpp serial ${catkin_EXPORTED_TARGETS})
+add_dependencies(send_control roscpp ${catkin_EXPORTED_TARGETS})
 
-add_executable(test_subscribe src/ROS-Testing/test_subscribe)
-target_link_libraries(test_subscribe ${catkin_LIBRARIES})
-add_dependencies(test_subscribe roscpp serial ${catkin_EXPORTED_TARGETS})
+#add_executable(test_subscribe src/ROS-Testing/test_subscribe)
+#target_link_libraries(test_subscribe ${catkin_LIBRARIES})
+#add_dependencies(test_subscribe roscpp ${catkin_EXPORTED_TARGETS})
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

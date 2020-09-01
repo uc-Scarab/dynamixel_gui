@@ -1,0 +1,8 @@
+prefix=/home/charles/devel/ros/scarab/scarab_ros/devel_isolated/rosserial_embeddedlinux
+
+Name: rosserial_embeddedlinux
+Description: Description of rosserial_embeddedlinux
+Version: 0.9.0
+Cflags: 
+Libs: -L/home/charles/devel/ros/scarab/scarab_ros/devel_isolated/rosserial_embeddedlinux/lib 
+Requires: 

@@ -1,0 +1,8 @@
+prefix=/home/charles/devel/ros/scarab/scarab_ros/devel_isolated/rosserial_msgs
+
+Name: rosserial_msgs
+Description: Description of rosserial_msgs
+Version: 0.9.0
+Cflags: -I/home/charles/devel/ros/scarab/scarab_ros/devel_isolated/rosserial_msgs/include
+Libs: -L/home/charles/devel/ros/scarab/scarab_ros/devel_isolated/rosserial_msgs/lib 
+Requires: message_runtime

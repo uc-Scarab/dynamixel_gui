@@ -4,7 +4,9 @@ import numpy as np
 from roboticstoolbox.robot.Link import *
 from spatialmath.pose3d import *
 from scipy.optimize import minimize
-# from graphics.graphics_robot import *
+import graphics as gph
+from roboticstoolbox.robot.trajectory import *
+
 
 class SerialLink:
 
@@ -18,6 +20,8 @@ class SerialLink:
         :param q: initial angles for link joints.
         :param colors: colors of STL files.
         """
+        self.g_canvas = None
+        self.roplot = None
         self.pipeline = None
         self.links = links
         if q is None:
@@ -90,24 +94,34 @@ class SerialLink:
             jointconfig = argcheck.getvector(jointconfig)
         if unit == 'deg':
             jointconfig = jointconfig * pi / 180
-        if alltout:
-            allt = list(range(0, self.length))
         if jointconfig.size == self.length:
+            if alltout:
+                allt = [SE3(self.base)]
             t = SE3(self.base)
             for i in range(self.length):
                 t *= self.links[i].A(jointconfig[i])
                 if alltout:
-                    allt[i] = t
+                    allt.append(t)
+            #TODO tool isn't shown in allt
             t *= SE3(self.tool)
         else:
             assert jointconfig.shape[1] == self.length, "joinconfig must have {self.length} columns"
-            t = list(range(0, jointconfig.shape[0]))
+            if alltout:
+                allt = []
+            t = []
             for k in range(jointconfig.shape[0]):
                 qk = jointconfig[k, :]
-                tt = SE3(self.base)
+                jointpose = SE3(self.base)
+                if alltout:
+                    armpose = []
                 for i in range(self.length):
-                    tt *= self.links[i].A(qk[i])
-                t[k] = tt * SE3(self.tool)
+                    jointpose *= self.links[i].A(qk[i])
+                    if alltout:
+                        armpose.append(jointpose)
+                t.append(jointpose * SE3(self.tool))
+                if alltout:
+                    allt.append(armpose)
+
         if alltout:
             return allt
         else:
@@ -149,24 +163,52 @@ class SerialLink:
         :param unit: unit of angles. radians if not defined
         :return: a vpython robot object.
         """
+
         if type(jointconfig) == list:
             jointconfig = argcheck.getvector(jointconfig)
         if unit == 'deg':
             jointconfig = jointconfig * pi / 180
         if jointconfig.size == self.length:
             poses = self.fkine(jointconfig, unit, alltout=True)
-            t = list(range(len(poses)))
-            for i in range(len(poses)):
-                t[i] = poses[i].t
-            # add the base
-            t.insert(0, SE3(self.base).t)
-            grjoints = list(range(len(t)-1))
 
-            canvas_grid = init_canvas()
+        if self.roplot is None:
+            # No current plot, create robot plot
 
-            for i in range(1, len(t)):
-                grjoints[i-1] = RotationalJoint(vector(t[i-1][0], t[i-1][1], t[i-1][2]), vector(t[i][0], t[i][1], t[i][2]))
-            print(grjoints)
-            x = GraphicalRobot(grjoints)
+                self.g_canvas = gph.GraphicsCanvas3D()
+                print("canvas created")
 
-            return x
+                self.roplot = gph.GraphicalRobot(self.g_canvas, self.name)
+
+                for i in range(1, len(poses)):
+
+                    # calculate length of joint
+                    x1 = poses[i-1].t[0]
+                    x2 = poses[i].t[0]
+                    y1 = poses[i-1].t[1]
+                    y2 = poses[i].t[1]
+                    z1 = poses[i-1].t[2]
+                    z2 = poses[i].t[2]
+                    length = sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) + (z2-z1)*(z2-z1))
+
+                    # add joint to robot
+                    self.roplot.append_link(self.links[i-1].jointtype, poses[i], length, )
+
+                return
+        else:
+            # Move existing plot
+            self.roplot.set_joint_poses(poses[1:4])
+            return
+
+    def animate(self, q1, q2, unit='rad', frames=10, fps=5):
+        """
+        animates an existing plot.
+        :param q1: starting joint config
+        :param q2: end joint config
+        :param unit: unit of angles #TODO
+        :param frames: steps between joint configurations
+        :param fps: frames per second. used by graphics library
+        """
+        assert (self.roplot is not None), "plot has not been created. Use plot() first."
+        traj = jtraj(q1, q2, frames)
+        tposes = self.fkine(traj, alltout=True)
+        self.roplot.animate(tposes, fps)

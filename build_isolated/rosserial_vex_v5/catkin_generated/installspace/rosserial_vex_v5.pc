@@ -1,0 +1,8 @@
+prefix=/home/charles/devel/ros/scarab/scarab_ros/install_isolated
+
+Name: rosserial_vex_v5
+Description: Description of rosserial_vex_v5
+Version: 0.9.0
+Cflags: 
+Libs: -L/home/charles/devel/ros/scarab/scarab_ros/install_isolated/lib 
+Requires: 

@@ -1,0 +1,2 @@
+set(motor_positions_MESSAGE_FILES "/home/charles/devel/ros/scarab/scarab_ros/src/motor_positions/ROS-msgs/motorPosition.msg;/home/charles/devel/ros/scarab/scarab_ros/src/motor_positions/ROS-msgs/positionArray.msg;/home/charles/devel/ros/scarab/scarab_ros/src/motor_positions/ROS-msgs/viaPoints.msg;/home/charles/devel/ros/scarab/scarab_ros/src/motor_positions/ROS-msgs/trajectory.msg;/home/charles/devel/ros/scarab/scarab_ros/src/motor_positions/ROS-msgs/controlTable.msg")
+set(motor_positions_SERVICE_FILES "")

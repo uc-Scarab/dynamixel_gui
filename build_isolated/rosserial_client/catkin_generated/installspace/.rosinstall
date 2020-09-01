@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/charles/devel/ros/scarab/scarab_ros/install_isolated/setup.sh

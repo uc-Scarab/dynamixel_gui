@@ -1,0 +1,8 @@
+prefix=/home/charles/devel/ros/scarab/scarab_ros/devel_isolated/rosserial_test
+
+Name: rosserial_test
+Description: Description of rosserial_test
+Version: 0.9.0
+Cflags: 
+Libs: -L/home/charles/devel/ros/scarab/scarab_ros/devel_isolated/rosserial_test/lib 
+Requires: rosserial_msgs std_msgs

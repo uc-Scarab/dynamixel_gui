@@ -1,0 +1,1 @@
+set(ORDERED_PATHS "/home/charles/devel/ros/scarab/scarab_ros/devel_isolated/rosserial_server/lib;/home/charles/catkin_ws/install_isolated/lib")

@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/charles/devel/ros/scarab/scarab_ros/build_isolated/motor_positions",
+  "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"motor_positions\\\" -I/home/charles/devel/ros/scarab/scarab_ros/devel_isolated/motor_positions/include -I/home/charles/devel/ros/scarab/scarab_ros/src/motor_positions/include -I/home/charles/catkin_ws/install_isolated/include -I/home/charles/catkin_ws/install_isolated/share/xmlrpcpp/cmake/../../../include/xmlrpcpp    -o CMakeFiles/send_control.dir/src/ROS-Testing/send_control.cpp.o -c /home/charles/devel/ros/scarab/scarab_ros/src/motor_positions/src/ROS-Testing/send_control.cpp",
+  "file": "/home/charles/devel/ros/scarab/scarab_ros/src/motor_positions/src/ROS-Testing/send_control.cpp"
+}
+]

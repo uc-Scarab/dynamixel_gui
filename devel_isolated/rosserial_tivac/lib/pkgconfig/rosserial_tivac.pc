@@ -1,0 +1,8 @@
+prefix=/home/charles/devel/ros/scarab/scarab_ros/devel_isolated/rosserial_tivac
+
+Name: rosserial_tivac
+Description: Description of rosserial_tivac
+Version: 0.9.0
+Cflags: 
+Libs: -L/home/charles/devel/ros/scarab/scarab_ros/devel_isolated/rosserial_tivac/lib 
+Requires: 
